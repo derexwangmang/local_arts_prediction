@@ -16,7 +16,37 @@ output:
 
 ## Research Questions
 
-## Expected Difficulties
+Our project will be focused on a predictive analysis. Potential research questions
+include:
+
+- Based on some or all of the factors, how often would a given participant attend
+different performances?
+- Based on some or all of the factors, what is the age of the participant?
+- Based on some or all of the factors, what is the income range for the participant?
+
+Of these, predicting the income range is the most similar to a real world scenario.
+Thus, we will most likely focus on answering that question. Since this is an income
+range, rather than income itself, this question may be best answered by a classification
+approach.
+
+Variables that may be helpful in modeling the response may include the education
+level, age, and participation in arts and performances.
+
+## Expected Data Difficulties
+
+The data retrieval process consisted of downloading the dataset from an online resource.
+
+After briefly reviewing the dataset, the data appear to be organized and tidy.
+Many rows contain `NA` values, but that is most likely due to the fact that some
+values are conditional, dependent on the answers to other columns. For example,
+the second column is about whether the participant attended a live jazz performance,
+while third column is about how many times the participant attended a live jazz
+performance in the last 12 months. There are 4188 `No` responses and 9 `Don't know`
+responses in the second column and 4197 `NA` responses in the third column. Thus,
+while some of the data appear to be missing, this may be because the interviewer
+the question did not apply to the respondent, and the implicit value is 0. In
+other cases, however, the data may be missing, or the participant felt uncomfortable
+answering the question.
 
 ## Proposed Timeline
 
