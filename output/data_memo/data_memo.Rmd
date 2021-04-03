@@ -36,19 +36,12 @@ level, age, and participation in arts and performances.
 
 The data retrieval process consisted of downloading the dataset from an online resource.
 
-After briefly reviewing the dataset, the data appear to be organized and tidy.
 Many rows contain `NA` values, but that is most likely due to the fact that some
-values are conditional, dependent on the answers to other columns. For example,
-the second column is about whether the participant attended a live jazz performance,
-while third column is about how many times the participant attended a live jazz
-performance in the last 12 months. There are 4188 `No` responses and 9 `Don't know`
-responses in the second column and 4197 `NA` responses in the third column. Thus,
-while some of the data appear to be missing, this may be because the interviewer
-the question did not apply to the respondent, and the implicit value is 0. In
-other cases, however, the data may be missing, or the participant felt uncomfortable
-answering the question.
+values are conditional on the answers to other columns. For example, the fourth column is about whether the participant attended a live jazz performance, while fifth column is about how many *times* the participant attended a live jazz performance in the last 12 months. Thus those people who responded that they didn't attend a live jazz performance in last 12 months wouldn't have any response to the number of times they attended a live jazz performance (resulting in missing values). There are 4188 `No` responses and 9 `Don't know` responses in the fourth column and 4197 `NA` responses in the fifth column. This confirms that missing values in the fifth column correspond to people who said `No` or `Don't know` to question four (whether or not they attended live jazz in the past year). In other cases, however, the data may simply be missing, or the participant might have felt uncomfortable answering the question.
+
+Other minor difficulties may come from data cleaning that needs to take place before the data can be used in the modeling process. The data unfortunately does not come in a tibble format, and therefore must be converted. The variable names should also be cleaned so that they are all in snake case. Finally, the factor variables might have to be edited. Although they all accurately read in as factor variables, the levels of all the factor variables include numbers as well as text (for example, the variable `jazz` has the levels `(1) Yes`, `(2) No`, `(3) Don't Know`, and `(4) Refused`). This data cleaning is relatively minor, however, and shouldn't pose any major problems. 
 
 ## Proposed Timeline
 
-## citations
+## Citations
 
