@@ -7,9 +7,8 @@ output:
     toc: true
     toc_float: true
     highlight: "tango"
-  pdf_document:
+    pdf_document:
     latex_engine: xelatex
-    toc: yes
 ---
 
 ## Overview
@@ -51,5 +50,4 @@ Other minor difficulties may come from data cleaning that needs to take place be
 
 ## Proposed Timeline
 
-## Citations
 
