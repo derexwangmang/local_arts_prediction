@@ -1,0 +1,465 @@
+File Manifest for ICPSR 35586
+
+National Endowment for the Arts. Local Area Arts Participation Study 1992.
+ICPSR35586-v1. Ann Arbor, MI: Inter-university Consortium for Political and
+Social Research [distributor], 2015-03-23.
+http://doi.org/10.3886/ICPSR35586.v1
+
+
+Study-level Documentation
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-descriptioncitation.pdf       -       -         -       2016-11-11  -
+
+    35586-related_literature.txt        -       -         -       daily       -
+
+    35586-manifest.txt                  -       -         -       daily       -
+
+    35586-Questionnaire.pdf             -       -         -       2015-03-23  9501e0ba102e5f1b6af352dbcfca4c71
+
+    35586-Report.pdf                    -       -         -       2015-03-23  66c51e0fbc4909968c384dbeec88b600
+
+
+DS0001 Local Area Arts Participation Study 1992: Aggregate
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0001-Codebook.pdf             -       -         -       2015-03-23  15ada2032df54253b37b661b6652f071
+
+    35586-0001-Data.dta                 -       5,040     95      2015-03-23  061bf7d5c2ff530b0c414a4ff027f0c5
+
+    35586-0001-Data.rda                 -       5,040     95      2015-03-23  f3d5a3307d91dd1cc086b9917cd008ba
+
+    35586-0001-Data.sav                 -       5,040     95      2015-03-23  4cfa20efd96a782099e4465f79812eb3
+
+    35586-0001-Data.stc                 -       5,040     95      2015-03-23  7da19b599efbd458fb4a98f4f3e4070e
+
+    35586-0001-Data.tsv                 -       5,040     95      2015-03-23  d7bb289faac7ccb50fc5543befcbca01
+
+    35586-0001-Data.txt                 166     5,040     95      2015-03-23  5c94eb04cfae93823c02767f06c94694
+
+    35586-0001-Data.xls                 -       5,040     95      2015-03-23  cb93108d4feacad265952cf7edae1efc
+
+    35586-0001-Setup.dct                -       -         -       2015-03-23  52fe937f8f5dda59c56081e8a23cd7e2
+
+    35586-0001-Setup.do                 -       -         -       2015-03-23  3c5290d159ddd01ba41acd6fa2a894a7
+
+    35586-0001-Setup.sas                -       -         -       2015-03-23  41d548ac070ba9c566204a9fdc47403e
+
+    35586-0001-Setup.sps                -       -         -       2015-03-23  5908a0251c718951b26b8961c97d2a92
+
+    35586-0001-Supplemental_syntax.do   -       -         -       2015-03-23  471579e5113430e21273a43b1545df1f
+
+    35586-0001-Supplemental_syntax.sas  -       -         -       2015-03-23  15ee70f624e3ed9bbd09de9d0be0e62e
+
+
+DS0002 Local Area Arts Participation Study 1992: Broward County
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0002-Codebook.pdf             -       -         -       2015-03-23  426b1e272b47e0c4e5e2de5e61cd9a05
+
+    35586-0002-Data.dta                 -       403       130     2015-03-23  c7b54bd990b772e31cd2d9291ad77cb6
+
+    35586-0002-Data.rda                 -       403       130     2015-03-23  d759af6961ffe41ae0106d6621578bf3
+
+    35586-0002-Data.sav                 -       403       130     2015-03-23  e4f96b745d5a268ba9c9c57c4696786c
+
+    35586-0002-Data.stc                 -       403       130     2015-03-23  29990efbf3e6e5db4c6fb738addf6622
+
+    35586-0002-Data.tsv                 -       403       130     2015-03-23  e261ea7fb5426adb74a5debb9715d00e
+
+    35586-0002-Data.txt                 217     403       130     2015-03-23  b089a3cdd7b654b3fa59e7dd495f7185
+
+    35586-0002-Data.xls                 -       403       130     2015-03-23  60b934d07c6e00a092589236dc13de25
+
+    35586-0002-Setup.dct                -       -         -       2015-03-23  8cea1ae1bbe32ab22520a216ed15b318
+
+    35586-0002-Setup.do                 -       -         -       2015-03-23  63beef944299a38c0881ec2093d8f7be
+
+    35586-0002-Setup.sas                -       -         -       2015-03-23  8ab9b85a6cd06240ccd0886f948b7499
+
+    35586-0002-Setup.sps                -       -         -       2015-03-23  c476cd2435f0c83925d35845a6351015
+
+    35586-0002-Supplemental_syntax.do   -       -         -       2015-03-23  88fc75a8f7bc6af4cdd0cb60eeaac925
+
+    35586-0002-Supplemental_syntax.sas  -       -         -       2015-03-23  70585fb280bc252b6d10c4abda5110cb
+
+
+DS0003 Local Area Arts Participation Study 1992: Chicago
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0003-Codebook.pdf             -       -         -       2015-03-23  9e7339f9650fb9824411a3ec6e4d482b
+
+    35586-0003-Data.dta                 -       401       105     2015-03-23  f9276afa83fe5fec106e695080e81763
+
+    35586-0003-Data.rda                 -       401       105     2015-03-23  93db7480bf76411311a881dfc920e5f6
+
+    35586-0003-Data.sav                 -       401       105     2015-03-23  c34cc7ec51003de11bd236b11eefbefc
+
+    35586-0003-Data.stc                 -       401       105     2015-03-23  bbd59adceb3a7548c7e5246f95ea85fa
+
+    35586-0003-Data.tsv                 -       401       105     2015-03-23  97683f8fa0a63de9a71873a9b210db56
+
+    35586-0003-Data.txt                 188     401       105     2015-03-23  e758e64c9dcceb2279f0a5a3141880ee
+
+    35586-0003-Data.xls                 -       401       105     2015-03-23  8a32f1e5f0f2b15a7057a8626f8ab455
+
+    35586-0003-Setup.dct                -       -         -       2015-03-23  a07feae2c13228f50486147257a22a95
+
+    35586-0003-Setup.do                 -       -         -       2015-03-23  3501f1accf3b18cad31cb344173d2eb2
+
+    35586-0003-Setup.sas                -       -         -       2015-03-23  ed42d448952b2313ef3e71bd80bff317
+
+    35586-0003-Setup.sps                -       -         -       2015-03-23  7a740de2ca3aa8eb64147ae91e2065c1
+
+    35586-0003-Supplemental_syntax.do   -       -         -       2015-03-23  d7edf47ba81ca5e1ccb222c81009691f
+
+    35586-0003-Supplemental_syntax.sas  -       -         -       2015-03-23  ea4b33d628bbf3b4212997c0e381f776
+
+
+DS0004 Local Area Arts Participation Study 1992: Dade County
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0004-Codebook.pdf             -       -         -       2015-03-23  3115ecb3b28660af48b7c32968c159e5
+
+    35586-0004-Data.dta                 -       402       130     2015-03-23  18233055d8d440ce8bf7618eb63ab61f
+
+    35586-0004-Data.rda                 -       402       130     2015-03-23  4f2e0637790e306769bf5954d539f9ab
+
+    35586-0004-Data.sav                 -       402       130     2015-03-23  475cc28fc689cc0b984358d5dd9dfe6d
+
+    35586-0004-Data.stc                 -       402       130     2015-03-23  5d84d2daf0659ae4dfe6f0f1b38d302f
+
+    35586-0004-Data.tsv                 -       402       130     2015-03-23  8871d8357dcea3360d3a941cfaecadc2
+
+    35586-0004-Data.txt                 218     402       130     2015-03-23  65f52f0752edd005d16e680e83c6dbe4
+
+    35586-0004-Data.xls                 -       402       130     2015-03-23  2d2b323a85e2dd6c168985e12409d593
+
+    35586-0004-Setup.dct                -       -         -       2015-03-23  ac684c6a2abd22380b0e80a0ac27f2af
+
+    35586-0004-Setup.do                 -       -         -       2015-03-23  55e1dbc3e09d477c289a849bbe5855ca
+
+    35586-0004-Setup.sas                -       -         -       2015-03-23  b2e64cc7c521135bf88dbc8aff6c8fdc
+
+    35586-0004-Setup.sps                -       -         -       2015-03-23  a805b2dd4b6c153d51da9dd13ad30c5c
+
+    35586-0004-Supplemental_syntax.do   -       -         -       2015-03-23  5b8a7a6fb91731ee4bc6bb987efa2d8a
+
+    35586-0004-Supplemental_syntax.sas  -       -         -       2015-03-23  5a9b50d26fa5d569c6ed0e33d26e3d9e
+
+
+DS0005 Local Area Arts Participation Study 1992: Las Vegas
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0005-Codebook.pdf             -       -         -       2015-03-23  15332cbbe40348df6b5fa31a2fd503e4
+
+    35586-0005-Data.dta                 -       402       109     2015-03-23  98a9b91f0de8eecf6aabbb995ce2649d
+
+    35586-0005-Data.rda                 -       402       109     2015-03-23  7e6f6c9adfb7e392b46ef1380bebbe75
+
+    35586-0005-Data.sav                 -       402       109     2015-03-23  ec21a1f0847ae7e4f2d6a85b0c809377
+
+    35586-0005-Data.stc                 -       402       109     2015-03-23  851bad62140032254fc0a0510d6bae12
+
+    35586-0005-Data.tsv                 -       402       109     2015-03-23  ab2ad74e3669484bca5f54bf29026e0d
+
+    35586-0005-Data.txt                 196     402       109     2015-03-23  07c3e0ed700a60321717f77a1833d8bc
+
+    35586-0005-Data.xls                 -       402       109     2015-03-23  5c6be537b3da19ef6bfcbd8cb71daf97
+
+    35586-0005-Setup.dct                -       -         -       2015-03-23  4b8c5900aca35fb9aff7b6659048efc5
+
+    35586-0005-Setup.do                 -       -         -       2015-03-23  9858f3fdd2c2e1902606ce0991aa01e1
+
+    35586-0005-Setup.sas                -       -         -       2015-03-23  2c9fcc2fcb3ad11b9197b9558572c05c
+
+    35586-0005-Setup.sps                -       -         -       2015-03-23  8e66c7f774e7afe35fce42d3561bcb7e
+
+    35586-0005-Supplemental_syntax.do   -       -         -       2015-03-23  f5b64a786e4462616ce599e00d6b1288
+
+    35586-0005-Supplemental_syntax.sas  -       -         -       2015-03-23  625e61a21f54581d339c068de7e75ba3
+
+
+DS0006 Local Area Arts Participation Study 1992: Philadelphia
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0006-Codebook.pdf             -       -         -       2015-03-23  c2d73743b8d63426551f6a76089034fc
+
+    35586-0006-Data.dta                 -       607       105     2015-03-23  c9f315302701cd4599cbce5b464edacc
+
+    35586-0006-Data.rda                 -       607       105     2015-03-23  4c86136c1db2ffe0871952bc05895261
+
+    35586-0006-Data.sav                 -       607       105     2015-03-23  618f1a5b089931b53eb9de280d57f0ed
+
+    35586-0006-Data.stc                 -       607       105     2015-03-23  946dda225649d28c31f4e4e5c25f48a9
+
+    35586-0006-Data.tsv                 -       607       105     2015-03-23  d5c1cd7ec15a584e748c095f10dc7341
+
+    35586-0006-Data.txt                 189     607       105     2015-03-23  afc86c501451c2dfe5a03d88d69e9f77
+
+    35586-0006-Data.xls                 -       607       105     2015-03-23  2273942c312e31811c005ca5b235f689
+
+    35586-0006-Setup.dct                -       -         -       2015-03-23  156321ad03c36dc00c5dfcd438ba6d1b
+
+    35586-0006-Setup.do                 -       -         -       2015-03-23  e04b41ad023518f569a223311e167e1f
+
+    35586-0006-Setup.sas                -       -         -       2015-03-23  636968dd439d77b9402a8c1d01dfd332
+
+    35586-0006-Setup.sps                -       -         -       2015-03-23  779d95eb98922b2d0fc436dc336b1a0f
+
+    35586-0006-Supplemental_syntax.do   -       -         -       2015-03-23  a520cb427ce3dbb353779835386535e3
+
+    35586-0006-Supplemental_syntax.sas  -       -         -       2015-03-23  ce066ae812dc38a5257145d533be75fa
+
+
+DS0007 Local Area Arts Participation Study 1992: Pittsburgh
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0007-Codebook.pdf             -       -         -       2015-03-23  11d1f46742b55e3e20865f6a14d617fa
+
+    35586-0007-Data.dta                 -       411       105     2015-03-23  661d3b041bb447dec8ebe4ad687a6e03
+
+    35586-0007-Data.rda                 -       411       105     2015-03-23  62649aa22b5410de46d4a6cdc6374684
+
+    35586-0007-Data.sav                 -       411       105     2015-03-23  2f10c01cb31462d34c6888b081f145a6
+
+    35586-0007-Data.stc                 -       411       105     2015-03-23  0a417984a08eba9ea4a95cf0d1c5157d
+
+    35586-0007-Data.tsv                 -       411       105     2015-03-23  6e310f5981a5833a30cbfdc65565888a
+
+    35586-0007-Data.txt                 193     411       105     2015-03-23  1b8ce494145b89eabbbd7652435beeda
+
+    35586-0007-Data.xls                 -       411       105     2015-03-23  85f61a9b7ac021ec32ffdcc2ce7e6b61
+
+    35586-0007-Setup.dct                -       -         -       2015-03-23  5e2effa408efb5c1474d04da81cdf95a
+
+    35586-0007-Setup.do                 -       -         -       2015-03-23  70d3ec39f108370d2a0f41e1efba68d3
+
+    35586-0007-Setup.sas                -       -         -       2015-03-23  5977ec2f6860b900700688cb30cfc4bc
+
+    35586-0007-Setup.sps                -       -         -       2015-03-23  d65f403672cf0afdb8efb9f897f38dca
+
+    35586-0007-Supplemental_syntax.do   -       -         -       2015-03-23  d6c12f58902acbde4841ed4a91d9917f
+
+    35586-0007-Supplemental_syntax.sas  -       -         -       2015-03-23  7e4b2b44ba75593552d836d5861e19f5
+
+
+DS0008 Local Area Arts Participation Study 1992: Reno
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0008-Codebook.pdf             -       -         -       2015-03-23  576bd520ef09c5278604dfb92f1f6adf
+
+    35586-0008-Data.dta                 -       401       106     2015-03-23  762cf1e103c272e409b089bafb11dc00
+
+    35586-0008-Data.rda                 -       401       106     2015-03-23  877207f700028856b10342098b65a1f4
+
+    35586-0008-Data.sav                 -       401       106     2015-03-23  e660bb004dbd89c38a4162532b5fbcec
+
+    35586-0008-Data.stc                 -       401       106     2015-03-23  6a3b957d65d767f14713c28e92d7aeda
+
+    35586-0008-Data.tsv                 -       401       106     2015-03-23  8e4767f6e7121c77df1a3987aa8a6752
+
+    35586-0008-Data.txt                 192     401       106     2015-03-23  05a99c43f612c3174a119cbb71ca8ae5
+
+    35586-0008-Data.xls                 -       401       106     2015-03-23  d3747e824d35665f5793befd115a3a81
+
+    35586-0008-Setup.dct                -       -         -       2015-03-23  443e0f2263b4aaaf80756a696c9346af
+
+    35586-0008-Setup.do                 -       -         -       2015-03-23  400ee2ed84b766ca40e170a1ebe51f64
+
+    35586-0008-Setup.sas                -       -         -       2015-03-23  f71c796d5647edf77fb139bc6cfe3b69
+
+    35586-0008-Setup.sps                -       -         -       2015-03-23  7e00ed0069bbf7e296f748e6d719eb5c
+
+    35586-0008-Supplemental_syntax.do   -       -         -       2015-03-23  d32a743222ea16dc93d552eb692ca31a
+
+    35586-0008-Supplemental_syntax.sas  -       -         -       2015-03-23  d5b916e9b985ad8e6b26396c4f035cf8
+
+
+DS0009 Local Area Arts Participation Study 1992: Rural Nevada
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0009-Codebook.pdf             -       -         -       2015-03-23  514366a6f9e78057e1ab5f249f3f4e2b
+
+    35586-0009-Data.dta                 -       401       106     2015-03-23  a14cb262a6ff36530cb04e0409cee78f
+
+    35586-0009-Data.rda                 -       401       106     2015-03-23  dc845d747ea7b5c40ab4b6cb73a67f17
+
+    35586-0009-Data.sav                 -       401       106     2015-03-23  2984355c9872592f8514bf652cb6ade0
+
+    35586-0009-Data.stc                 -       401       106     2015-03-23  96c6f48b7bc2189111d6cecfbe6fcefc
+
+    35586-0009-Data.tsv                 -       401       106     2015-03-23  ff456a4dfe1b0cc1c4601dbe052c5cd3
+
+    35586-0009-Data.txt                 192     401       106     2015-03-23  2d5c25584f3f95f7fb8c0eac873aaab5
+
+    35586-0009-Data.xls                 -       401       106     2015-03-23  d6b0d95959a92df0dc7a849f42b4a8a7
+
+    35586-0009-Setup.dct                -       -         -       2015-03-23  85f2de9a566e87bf86c3c1be5ae778c6
+
+    35586-0009-Setup.do                 -       -         -       2015-03-23  673ebdc63d0e02798de0f751187d999b
+
+    35586-0009-Setup.sas                -       -         -       2015-03-23  01c74c194bc0c4a885e9a485cd833b8c
+
+    35586-0009-Setup.sps                -       -         -       2015-03-23  397f0d2f1a59d31eb18fce54c1cec554
+
+    35586-0009-Supplemental_syntax.do   -       -         -       2015-03-23  5243d0f3e832455d5667a320e0997396
+
+    35586-0009-Supplemental_syntax.sas  -       -         -       2015-03-23  dcd5379f4e641c1d59313defeffa5ff3
+
+
+DS0010 Local Area Arts Participation Study 1992: San Jose
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0010-Codebook.pdf             -       -         -       2015-03-23  dacf26a5d7f79055e02142737dd50f75
+
+    35586-0010-Data.dta                 -       401       110     2015-03-23  6ebce584cd7871715dae48f9ed5a43bf
+
+    35586-0010-Data.rda                 -       401       110     2015-03-23  d933d4a31af349297583db4ff1cb2379
+
+    35586-0010-Data.sav                 -       401       110     2015-03-23  83e839b08820f792e4d8ca18dbbe0dd1
+
+    35586-0010-Data.stc                 -       401       110     2015-03-23  50ae9cb24517a4885fc2a04efd80ed23
+
+    35586-0010-Data.tsv                 -       401       110     2015-03-23  009f6a3a2a347432452b07664fd69270
+
+    35586-0010-Data.txt                 198     401       110     2015-03-23  69de50a06bd979bd8f978f84da38b92e
+
+    35586-0010-Data.xls                 -       401       110     2015-03-23  8b46542dcd4259d4524e4d36bdf57ecb
+
+    35586-0010-Setup.dct                -       -         -       2015-03-23  f3406fec582d0360dd80880410566d55
+
+    35586-0010-Setup.do                 -       -         -       2015-03-23  8c98adf96d905c723cfe128020b40988
+
+    35586-0010-Setup.sas                -       -         -       2015-03-23  2b6dac63986ef4962f090fd589d2e51d
+
+    35586-0010-Setup.sps                -       -         -       2015-03-23  6b6e5dcd3c9065e3f32bdf6cf5864a90
+
+    35586-0010-Supplemental_syntax.do   -       -         -       2015-03-23  677c15933b39845d217721eac66ca61b
+
+    35586-0010-Supplemental_syntax.sas  -       -         -       2015-03-23  033a82d893c36acc34f7e2daefca4b77
+
+
+DS0011 Local Area Arts Participation Study 1992: Seattle
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0011-Codebook.pdf             -       -         -       2015-03-23  73f09d8e2e8edc926459bdc29275d7ee
+
+    35586-0011-Data.dta                 -       406       105     2015-03-23  040255655cdbd496da50fc6345710614
+
+    35586-0011-Data.rda                 -       406       105     2015-03-23  3bc4a711dc6954e45fcd6c4bf94547c2
+
+    35586-0011-Data.sav                 -       406       105     2015-03-23  b16e8321bd1f1ced8c06b772ca3f644e
+
+    35586-0011-Data.stc                 -       406       105     2015-03-23  1c29fbdf00128b889a4095e825c103bf
+
+    35586-0011-Data.tsv                 -       406       105     2015-03-23  f90325b83d0eacb200446fba3a3ee879
+
+    35586-0011-Data.txt                 187     406       105     2015-03-23  965be16c0003c4312f426fd6564dfa85
+
+    35586-0011-Data.xls                 -       406       105     2015-03-23  19d85e95cb1c85d12c8d7caddc667847
+
+    35586-0011-Setup.dct                -       -         -       2015-03-23  9065ac1fcf3dce067742d8b6d40a6088
+
+    35586-0011-Setup.do                 -       -         -       2015-03-23  fd92b05eb0fea00f047756171fe1c7d9
+
+    35586-0011-Setup.sas                -       -         -       2015-03-23  3efe711f69f1a2fa7278e65df761e457
+
+    35586-0011-Setup.sps                -       -         -       2015-03-23  27789b3304162ed14d48408cd6797f3f
+
+    35586-0011-Supplemental_syntax.do   -       -         -       2015-03-23  4f33086f33f292f003ec188a9d3a394c
+
+    35586-0011-Supplemental_syntax.sas  -       -         -       2015-03-23  7dcc3ef5141fcf8a58c6b08efeec28d2
+
+
+DS0012 Local Area Arts Participation Study 1992: Sedona
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0012-Codebook.pdf             -       -         -       2015-03-23  e225a192b4709c4b68fa8c63653dd0f9
+
+    35586-0012-Data.dta                 -       402       106     2015-03-23  49896c2c5d8c5be714dbca832c175558
+
+    35586-0012-Data.rda                 -       402       106     2015-03-23  2b536dfe7a8d2f0b896fcfe43e06c921
+
+    35586-0012-Data.sav                 -       402       106     2015-03-23  0515ef283d2a11f7e651dd51766e14c6
+
+    35586-0012-Data.stc                 -       402       106     2015-03-23  41512567af9602739981aca0a3e47bca
+
+    35586-0012-Data.tsv                 -       402       106     2015-03-23  78dbdf65b2f4523399ec240f985ffbce
+
+    35586-0012-Data.txt                 187     402       106     2015-03-23  e6f804338900e1cefc9e58c9f6ce1810
+
+    35586-0012-Data.xls                 -       402       106     2015-03-23  d9af8ea175f26759fd010043cc9bd864
+
+    35586-0012-Setup.dct                -       -         -       2015-03-23  676d61f9f1eeb5a361fe13624382e0f0
+
+    35586-0012-Setup.do                 -       -         -       2015-03-23  cdaac541dae79b39eb7aabe38818d7c1
+
+    35586-0012-Setup.sas                -       -         -       2015-03-23  a435039eff0580faf9b6a193e88282f0
+
+    35586-0012-Setup.sps                -       -         -       2015-03-23  3ba40ad5fc528dab5397a416f7b24459
+
+    35586-0012-Supplemental_syntax.do   -       -         -       2015-03-23  61544e3f4a3666bbfa4fec347d04e95a
+
+    35586-0012-Supplemental_syntax.sas  -       -         -       2015-03-23  3cac8c3c4052c1ab9490fae1e8367155
+
+
+DS0013 Local Area Arts Participation Study 1992: Winston-Salem
+
+    Filename                            Record  Record    Var.    Date        MD5
+                                        Length  Count     Count   Updated     Checksum
+
+    35586-0013-Codebook.pdf             -       -         -       2015-03-23  6d748bd89a5ddbc03e67d73fd7eca1ca
+
+    35586-0013-Data.dta                 -       403       106     2015-03-23  b808cd1b4cbf1c7e198203892611a401
+
+    35586-0013-Data.rda                 -       403       106     2015-03-23  28c326a54ff5ed418de650503a5cfd61
+
+    35586-0013-Data.sav                 -       403       106     2015-03-23  e67602c1ed4a6b8e21c4a82ce9204a7e
+
+    35586-0013-Data.stc                 -       403       106     2015-03-23  a0e5342a0f2d1dbd4af499f20ffaa7a6
+
+    35586-0013-Data.tsv                 -       403       106     2015-03-23  046dae583706f1e045324ecaa6e82748
+
+    35586-0013-Data.txt                 189     403       106     2015-03-23  a216c438bf602190bc93c086755fe91f
+
+    35586-0013-Data.xls                 -       403       106     2015-03-23  ef2f5a703bf5acb4da23cbc19ba12a47
+
+    35586-0013-Setup.dct                -       -         -       2015-03-23  3123a4dd845a60549232d6ffcef6f90b
+
+    35586-0013-Setup.do                 -       -         -       2015-03-23  e1d2fa21770dc3a724f6db5819526e1a
+
+    35586-0013-Setup.sas                -       -         -       2015-03-23  6fac7b28e9386162541143559156cc3d
+
+    35586-0013-Setup.sps                -       -         -       2015-03-23  5ad858efd54e7689d743473fc8ded501
+
+    35586-0013-Supplemental_syntax.do   -       -         -       2015-03-23  17cd84ea1714ea54166432dd4487c2dd
+
+    35586-0013-Supplemental_syntax.sas  -       -         -       2015-03-23  70446e19eed06bd8317a38ac142ae29d
+

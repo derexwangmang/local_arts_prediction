@@ -1,0 +1,24 @@
+---
+title: "Data Memo"
+author: "Derex Wangmang and Elena Andrews"
+date: "April 7, 2021"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    highlight: "tango"
+  pdf_document:
+    latex_engine: xelatex
+    toc: yes
+---
+
+## Overview
+
+## Research Questions
+
+## Expected Difficulties
+
+## Proposed Timeline
+
+## citations
+
