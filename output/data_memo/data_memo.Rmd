@@ -64,3 +64,5 @@ We have already created a Github repo and connected R project for the final proj
 
 **May 17th-May 23rd:** Evaluate models, choose a model that performs the best, and apply to testing data.
 
+**May 24th-June 9th:** Finish any necessary aspects of the project, including troubleshooting any remaining problems with models, finishing the project write-up, and completing the executive summary.
+
