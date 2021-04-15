@@ -28,5 +28,25 @@ for (i in 1:(length(all_col_names) - 1)) {
 local_arts_data <- local_arts_data %>% 
   clean_names()
 
+
+# Renaming Levels of Outcome ----------------------------------------------
+local_arts_data <- local_arts_data %>% 
+  mutate(
+    income = fct_recode(income,
+       "Refused" = "(11) Refused",
+       "Don't know" = "(10) Don't know", 
+       "$100,000 or MORE" = "(09) $100,000 or MORE", 
+       "$75,000 TO $99,999" = "(08) $75,000 TO $99,999",
+       "$50,000 TO $74,000" = "(07) $50,000 TO $74,000",
+       "$40,000 TO $49,999" = "(06) $40,000 TO $49,999",
+       "$30,000 TO $39,999" = "(05) $30,000 TO $39,999",
+       "$20,000 TO $29,999" = "(04) $20,000 TO $29,999",
+       "$15,000 TO $19,999" = "(03) $15,000 TO $19,999",
+       "$10,000 TO $14,999" = "(02) $10,000 TO $14,999",
+       "Under $10,000" = "(01) Under $10,000"
+       )
+  )
+
+
 # Write Out Processed Data Set --------------------------------------------
 save(local_arts_data, file = "data/processed/local_arts_data.Rda")
