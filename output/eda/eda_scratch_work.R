@@ -32,5 +32,20 @@ local_arts_train <- training(local_arts_split)
 local_arts_test <- testing(local_arts_split)
 
 # More EDA ---------------------------------------------------------------
+# income by jazz
+local_arts_data %>% 
+  filter(jazz != "(3) Don't know") %>% 
+  filter(!is.na(income) & income != "Refused" & income != "Don't know") %>% 
+  ggplot(aes(income, fill = jazz)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  theme_minimal()
 
-
+# income by classic
+local_arts_data %>% 
+  filter(classic != "(3) Don't know") %>% 
+  filter(!is.na(income) & income != "Refused" & income != "Don't know") %>% 
+  ggplot(aes(income, fill = classic)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  theme_minimal()
