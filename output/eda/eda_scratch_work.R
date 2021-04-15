@@ -3,6 +3,10 @@ library(tidyverse)
 library(naniar)
 library(tidymodels)
 
+
+# Set Seed ----------------------------------------------------------------
+set.seed(3206)
+
 # Load in Data ------------------------------------------------------------
 load(file = "data/processed/local_arts_data.Rda")
 
