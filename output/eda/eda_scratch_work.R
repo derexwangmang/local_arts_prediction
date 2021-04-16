@@ -48,6 +48,14 @@ local_arts_train %>%
   # graph using naniar
   gg_miss_var()
 
+# table of missingness
+local_arts_train %>%
+  # select only columns that have missing values
+  select_if(has_na) %>%
+  # summary of missing variables
+  miss_var_summary() %>% 
+  print(n = Inf)
+
 # income by jazz
 local_arts_data %>% 
   filter(jazz != "(3) Don't know") %>% 
