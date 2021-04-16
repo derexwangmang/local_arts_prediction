@@ -18,7 +18,7 @@ for (i in 1:(length(all_col_names) - 1)) {
   if (all_col_names[i] == substring(all_col_names[i+1], 2)) {
     for (j in 1:(nrow(local_arts_data[i]))) {
       if (local_arts_data[j,i] == "(2) No") {
-        local_arts_data[j, i+1] = 0
+        local_arts_data[j,i+1] = 0
       }
     }
   }
@@ -47,6 +47,16 @@ local_arts_data <- local_arts_data %>%
        )
   )
 
+
+# Categorizing Variables as NA --------------------------------------------
+
+# Converts categorical values with "Don't know" or "Refused" to NA
+local_arts_data <- local_arts_data %>%
+  mutate_all(~ replace(., grepl("Don't know$|Refused$", .), NA))
+
+# Converts numerical values with "Don't know" or "Refused" to NA
+local_arts_data <- local_arts_data %>%
+  mutate_all(~ replace(., . == 98 | . == 99, NA))
 
 # Write Out Processed Data Set --------------------------------------------
 save(local_arts_data, file = "data/processed/local_arts_data.Rda")

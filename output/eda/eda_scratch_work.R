@@ -36,7 +36,7 @@ local_arts_test <- testing(local_arts_split)
 # skim entire data-set
 skim_without_charts(local_arts_train)
 
-# create function to indentify columns with missing values
+# create function to identify columns with missing values
 has_na <- function(x){
   any(is.na(x))
 }

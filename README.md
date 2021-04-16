@@ -1,1 +1,1 @@
-# local_area_prediction
+# local_arts_prediction

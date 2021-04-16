@@ -1,0 +1,21 @@
+---
+title: "eda_findings"
+author: "Elena Andrews, Derex Wangmang"
+date: "April 21, 2021"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    highlight: "tango"
+---
+
+## Initial Overview
+
+
+
+## Essential Findings
+
+
+
+## Secondary Findings
+
