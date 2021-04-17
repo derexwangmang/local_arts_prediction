@@ -1,5 +1,5 @@
 ---
-title: "eda_findings"
+title: "EDA Findings"
 author: "Elena Andrews, Derex Wangmang"
 date: "April 21, 2021"
 output:
@@ -7,11 +7,47 @@ output:
     toc: true
     toc_float: true
     highlight: "tango"
+    code-folding: true
 ---
 
 ## Initial Overview
 
+The dataset we are using for our final project comes from the Local Area Arts Participation study from 1992. This study was funded by the National Endowment for the Arts (Research Division) and conducted by Abt Associates of Cambridge, MA. It contains information on whether and how often Americans attend and participate in various kinds of local art, including jazz concerts, ballet performances, etc. It also contains various demographic characteristics of the respondents. In collecting the data, Abt Associates randomly selected Americans from 12 localities via a random-digit-dialing sampling methodology and contacted them by phone for this survey.
 
+In total, there are 5,040 total observations and 95 attributes. 72 of the characteristics are factored data while the other 23 are numeric data. The categorical characteristics generally involve whether the respondent attended or participated in local art as well as demographic data. The numerical features include the number of times the respondent attended that specific event as well as demographic data. There appear to be significant missingness within some characteristics of the data. These are due to three reasons:
+- The respondent did not know the answer.
+- The question did not apply to this respondent.
+- The respondent refused to answer the question.
+
+The majority of NA values are due to the fact that the question did not apply. For instance, the columns with the most missing values, `bar5` and `bar4`, ask about the fourth and fifth reasons the respondent did not attend cultural and artistic events more often. However, the previous three questions, `bar1`, `bar2`, and `bar3`, ask the same question. `mags` asks what magazines the respondent read to learn about art events in the community, which would be dependent on whether the respondent read magazines and cited them as a source for learning about art events. For those that do not fall under that category, it is more likely that the respondent did not know the answer than a refusal to the question.
+
+Below is an representation of the missingness.
+
+```{r, message = F}
+library(tidyverse)
+library(tidymodels)
+library(naniar)
+library(skimr)
+
+set.seed(3206)
+load(file = "data/processed/local_arts_data.Rda")
+
+local_arts_split <- initial_split(data = local_arts_data, prop = 0.7, strata = income)
+local_arts_train <- training(local_arts_split)
+
+has_na <- function(x){
+  any(is.na(x))
+}
+
+# graph missingness
+local_arts_train %>%
+  # select only columns that have missing values
+  select_if(has_na) %>%
+  # graph using naniar
+  gg_miss_var()
+
+skim_without_charts(local_arts_train)
+```
 
 ## Essential Findings
 

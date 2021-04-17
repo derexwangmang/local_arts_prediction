@@ -7,7 +7,7 @@ output:
     toc: true
     toc_float: true
     highlight: "tango"
-    pdf_document:
+  pdf_document:
     latex_engine: xelatex
 ---
 
