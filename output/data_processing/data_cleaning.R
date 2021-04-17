@@ -11,18 +11,28 @@ load(file = "data/unprocessed/local_arts_data.rda")
 local_arts_data <- as_tibble(da35586.0001)
 
 
-# Use a Loop To Make Appropriate Missing Values Zero ----------------------
+
+# Dropping Variables ------------------------------------------------------
+
+# Use a Loop To Make Appropriate Missing Values Zero and Track "W" Questions
 all_col_names <- colnames(local_arts_data)
+dropped_cols <- c()
 
 for (i in 1:(length(all_col_names) - 1)) {
   if (all_col_names[i] == substring(all_col_names[i+1], 2)) {
     for (j in 1:(nrow(local_arts_data[i]))) {
       if (local_arts_data[j,i] == "(2) No") {
         local_arts_data[j,i+1] = 0
+      } else if (all_col_names[i] == substring(all_col_names[i+2], 2)) {
+        dropped_cols <- c(dropped_cols, all_col_names[i+2])
       }
     }
   }
 }
+
+# Dropping Questions About Where/What Facility Participant Saw Performance
+local_arts_data <- local_arts_data %>%
+  select(-dropped_cols)
 
 # Clean Variable Names ----------------------------------------------------
 local_arts_data <- local_arts_data %>% 

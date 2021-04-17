@@ -39,19 +39,93 @@ has_na <- function(x){
   any(is.na(x))
 }
 
-# graph missingness
+# Graph missingness
 local_arts_train %>%
   # select only columns that have missing values
   select_if(has_na) %>%
   # graph using naniar
   gg_miss_var()
-
-skim_without_charts(local_arts_train)
 ```
+
+Given the amount of missingness in the data, it is expected that data will be imputed to replace missing values.
 
 ## Essential Findings
 
+### Response Variable
 
+Below is a high level overview of the target variable, the income levels of the participants. Roughly 18 percent of the data is categorized as `NA`, as 214 participants didn't know the answer, and 649 refused to answer the question, with significantly fewer (52) truly missing responses.
+
+For the rest of the data, the categories with the highest counts are `$50,000 to $74,000`, `$30,000 to $39,999`, and `$20,000 to $29,999`.
+
+```{r}
+local_arts_train %>%
+  select(income) %>%
+  ggplot(aes(x = income)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal()
+```
+
+### Predictor Variables
+
+After performing some initial cleaning and processing of the dataset, there are 88 variables remaining, 87 of which may serve as predictor variables. Of these, the demographic variables seem as if they could provide valuable insight into the income of the participant, as income generally increases with age and education. Their participation in the arts may also correlate with their income, as high participation in the arts may signal more available time for leisure activities.
+
+Some activities, such as reading books, are widely accessible than others, such as attending a live opera. As such, the expected predictor variables are in the table below.
+
+```{r}
+local_arts_train %>%
+  select(starts_with("n"), -newsp, hhsize, over18, age, marital, educ, race, income, gender, weight)
+```
+
+The proportion of people attending the arts seems like it follows the trend.
+
+```{r}
+local_arts_data %>% 
+  filter(museum != "(3) Don't know") %>% 
+  filter(!is.na(income)) %>%
+  select(income, jazz, classic, opera, musical, play, ballet, museum, fair) %>%
+  gather(-income, key = "var", value = "value") %>%
+  ggplot(aes(x = income, fill = value)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  facet_wrap(~ var, scales = "free") +
+  theme_minimal()
+```
+
+```{r}
+local_arts_train %>%
+  select(income, starts_with("n"), -newsp) %>%
+  filter(!is.na(income)) %>%
+  select(., 1:10) %>%
+  gather(-income, key = "var", value = "value") %>%
+  ggplot(aes(x = value, y = income)) +
+  geom_col() +
+  facet_wrap(~ var, scales = "free") +
+  theme_minimal()
+```
+
+```{r}
+local_arts_train %>%
+  select(income, starts_with("n"), -newsp) %>%
+  filter(!is.na(income)) %>%
+  select(., 1, 10:19) %>%
+  gather(-income, key = "var", value = "value") %>%
+  ggplot(aes(x = value, y = income)) +
+  geom_col() +
+  facet_wrap(~ var, scales = "free") +
+  theme_minimal()
+```
+
+```{r}
+local_arts_train %>%
+  select(income, hhsize, over18, age, marital, educ, race, income, gender, weight) %>%
+  filter(!is.na(income)) %>%
+  select(income, hhsize) %>%
+  ggplot(aes(hhsize)) +
+  geom_bar() +
+  facet_wrap(~ income, scales = "free") +
+  theme_minimal()
+```
 
 ## Secondary Findings
 
