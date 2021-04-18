@@ -123,51 +123,71 @@ local_arts_train <- training(local_arts_split)
 
 After performing some initial cleaning and processing of the dataset, there are 74 variables remaining, 73 of which may serve as predictor variables. Of these, the demographic variables (such as education level, `educ`, `race`, `gender`, and `age`) seem as if they could provide valuable insight into the income of the participant, as income generally increases with age and education. Their participation in the arts may also correlate with their income, as high participation in the arts may signal more available time for leisure activities. There are two sets of variables indicating participation in the arts: one set that is categorical, indicating whether or not the participant has gone to the indicated arts event in the last 12 months. The other set is numeric, indicating how many times the participant has gone to the indicated arts event in the last 12 months. Using both sets of variables might be a bit redundant, so we may focus on the numeric set rather than the categorical set, as that would give us a more nuanced look at not only whether or not the participant has been to certain arts events but the *frequency* with which they have attended those events.
 
-Some activities, such as reading books, are widely accessible than others, such as attending a live opera. As such, the expected predictor variables are in the table below.
+Taking a look at both the relationship between both thee categorical and numeric sets of predictor variables regarding participation in the arts and our outcome variable `income` shows that there is definitely a trend. 
 
 ```{r}
-local_arts_train %>%
-  select(starts_with("n"), hhsize, over18, age, marital, educ, race, income, gender, weight)
-```
-
-The proportion of people attending the arts seems like it follows the trend.
-
-```{r}
-local_arts_data %>% 
-  filter(museum != "(3) Don't know") %>% 
-  filter(!is.na(income)) %>%
+# combined graph of categorical arts participation variables
+local_arts_train %>% 
   select(income, jazz, classic, opera, musical, play, ballet, museum, fair) %>%
   gather(-income, key = "var", value = "value") %>%
   ggplot(aes(x = income, fill = value)) +
   geom_bar(position = "fill") +
   coord_flip() +
   facet_wrap(~ var, scales = "free") +
-  theme_minimal()
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Attendance at Arts Activities by Income",
+    fill = "have you\nattended\nin last\n 12 months?",
+    x = "prop"
+  )
 ```
 
+As you can see above, for every kind of local art activity, from live jazz, to a museum, to a staged play, the proportion of people who have attended in the last 12 months increases as you move up the income brackets. For each local art activity, the income bracket with the most people who attended in the last 12 months is the `$100,000 or more` income bracket. This makes sense: those with more money have the financial ability and time to attend local arts events. The same pattern seems to hold when we look at the numeric representation of arts attendance and participation.
+
 ```{r}
+# combined graph of numeric arts participation variables
 local_arts_train %>%
   select(income, starts_with("n")) %>%
   filter(!is.na(income)) %>%
   select(., 1:10) %>%
   gather(-income, key = "var", value = "value") %>%
   ggplot(aes(x = value, y = income)) +
-  geom_col() +
+  geom_boxplot() +
   facet_wrap(~ var, scales = "free") +
-  theme_minimal()
+  theme_minimal() +
+  coord_cartesian(xlim = c(0, 10)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Frequency of Attendance at Arts Activities by Income",
+    x = "number of times attending"
+  )
 ```
 
+It's a little hard to see a relationship for a lot of the variables, since so many people went zero times to a local arts performance. But for some variables, there does seem to be a positive relationship between the frequency of arts attendance and income. For example, people with an income of 100,000 dollars or more and those with an income between 75,000 and 99,999 visited museums in the last twelve months a median of 2 times, while those with lower household incomes visited museums on the whole less frequently. In addition, people with a household income of 20,000 dollars or more had a higher median number of visits to art fairs (`nfair`) than those with an income under 20,000 dollars.
+
+Below is another graph of `income` in relations to more variables indicating the number of times the respondent participated in a specific activity. `nbooks` refers to the number of books the respondent read in the last 12-months, `npark` refers to the number of times the respondent visited a history park/monument in the last twelve months, `ntvart` refers to the number of times the respondent watched a visual arts program on TV/VCR in the last twelve months, `ntvclass` refers to the number of times the respondent watched a classical music program on TV/VCR in the last twelve months, `ntvdance` refers to the number of times a respondent watched a dance program on TV in the last twelve months, `ntvjazz` refers to the number of times a respondent watched a jazz program on TV in th elast twelv months, `ntvmus` refers to the number of times a respondent watched a musical on TV in the last twelve months, `ntvopera` refers to the number of times a respondent watched opera on TV in last twelve months, and `ntvplay` refers to the number of times a respondent watched a play on TV in the last twelve months.
+
 ```{r}
+# combined graph of numeric arts participation variables 2
 local_arts_train %>%
   select(income, starts_with("n")) %>%
   filter(!is.na(income)) %>%
-  select(., 1, 10:19) %>%
+  select(., 1, 11:19) %>%
   gather(-income, key = "var", value = "value") %>%
   ggplot(aes(x = value, y = income)) +
-  geom_col() +
+  geom_boxplot() +
   facet_wrap(~ var, scales = "free") +
-  theme_minimal()
+  theme_minimal() +
+  coord_cartesian(xlim = c(0, 20)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Frequency of Engaging in/Watching Arts Activities by Income",
+    x = "number of times engaging"
+  )
 ```
+
+Again, since the majority of people watched or engaged in most of the above arts activities zero times in the last twelve months, there isn't much of a relationship between most of the variables and income, except for `nbooks` and `npark`. There is a very clear relationship between the income of a respondent and the numnber of books they read in the last twelve months, with those with the highest income reading the most and those with the lowest income reading the least. There also seems to be a slight relationship between the income of a respondent and the number of times they visited a historic park or monument, with those with the highest income visiting historic sites slightly more frequently then those with the lowest income.
 
 ```{r}
 local_arts_train %>%
@@ -182,3 +202,16 @@ local_arts_train %>%
 
 ## Secondary Findings
 
+
+
+
+
+
+
+
+Some activities, such as reading books, are widely accessible than others, such as attending a live opera. As such, the expected predictor variables are in the table below.
+
+```{r}
+local_arts_train %>%
+  select(starts_with("n"), hhsize, over18, age, marital, educ, race, income, gender, weight)
+```

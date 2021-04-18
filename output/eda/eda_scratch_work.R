@@ -67,7 +67,7 @@ local_arts_test <- testing(local_arts_split)
 
 # More EDA ---------------------------------------------------------------
 # income by jazz
-local_arts_data %>% 
+local_arts_train %>% 
   filter(jazz != "(3) Don't know") %>% 
   filter(!is.na(income) & income != "Refused" & income != "Don't know") %>% 
   ggplot(aes(income, fill = jazz)) +
@@ -79,7 +79,7 @@ local_arts_data %>%
        y = "prop")
 
 # income by classic
-local_arts_data %>% 
+local_arts_train %>% 
   filter(classic != "(3) Don't know") %>% 
   filter(!is.na(income) & income != "Refused" & income != "Don't know") %>% 
   ggplot(aes(income, fill = classic)) +
@@ -91,12 +91,10 @@ local_arts_data %>%
        y = "prop")
 
 # income by nclassic
-local_arts_data %>% 
-  filter(!is.na(income) & income != "Refused" & income != "Don't know") %>% 
+local_arts_train %>% 
   ggplot(aes(income, nclassic)) +
   geom_boxplot() +
-  theme_minimal() +
-  ylim(c(0, 20)) +
+  coord_cartesian(ylim = c(0, 20)) +
   coord_flip() +
   labs(
     y = "number of times attended live classical concert in last 12 months"
@@ -210,3 +208,58 @@ local_arts_data %>%
   labs(title = "Going to the movies by income",
        fill = "Have you gone to movie theater\nto see a movie\nin last 12 months?",
        y = "prop")
+
+# combined graph of categorical arts participation variables
+local_arts_train %>% 
+  select(income, jazz, classic, opera, musical, play, ballet, museum, fair) %>%
+  gather(-income, key = "var", value = "value") %>%
+  ggplot(aes(x = income, fill = value)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  facet_wrap(~ var, scales = "free") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Participation in Arts Activities by Income",
+    fill = "have you\nparticipated\nin this\nactivity\nin last 12 months?"
+  )
+
+# combined graph of numeric arts participation variables
+local_arts_train %>%
+  select(income, starts_with("n")) %>%
+  filter(!is.na(income)) %>%
+  select(., 1:10) %>%
+  gather(-income, key = "var", value = "value") %>%
+  ggplot(aes(x = value, y = income)) +
+  geom_boxplot() +
+  facet_wrap(~ var, scales = "free") +
+  theme_minimal() +
+  coord_cartesian(xlim = c(0, 10)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Frequency of Attendance at Arts Activities by Income"
+  )
+
+local_arts_train %>% 
+  ggplot(aes(nclassic)) +
+  geom_histogram(binwidth = 2) +
+  coord_cartesian(xlim = c(0, 15)) +
+  facet_wrap(~ income) +
+  labs(
+    x = "number of times attended live classical concert in last 12 months"
+  )
+
+local_arts_train %>%
+  select(income, starts_with("n")) %>%
+  filter(!is.na(income)) %>%
+  select(., 1, 11:19) %>%
+  gather(-income, key = "var", value = "value") %>%
+  ggplot(aes(x = value, y = income)) +
+  geom_boxplot() +
+  facet_wrap(~ var, scales = "free") +
+  theme_minimal() +
+  coord_cartesian(xlim = c(0, 20)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Frequency of Engaging in/Watching Arts Activities by Income"
+  )
