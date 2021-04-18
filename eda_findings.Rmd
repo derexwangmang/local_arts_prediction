@@ -125,7 +125,7 @@ After performing some initial cleaning and processing of the dataset, there are 
 
 Taking a look at both the relationship between both thee categorical and numeric sets of predictor variables regarding participation in the arts and our outcome variable `income` shows that there is definitely a trend. 
 
-```{r}
+```{r arts-attendence-1}
 # combined graph of categorical arts participation variables
 local_arts_train %>% 
   select(income, jazz, classic, opera, musical, play, ballet, museum, fair) %>%
@@ -145,7 +145,7 @@ local_arts_train %>%
 
 As you can see above, for every kind of local art activity, from live jazz, to a museum, to a staged play, the proportion of people who have attended in the last 12 months increases as you move up the income brackets. For each local art activity, the income bracket with the most people who attended in the last 12 months is the `$100,000 or more` income bracket. This makes sense: those with more money have the financial ability and time to attend local arts events. The same pattern seems to hold when we look at the numeric representation of arts attendance and participation.
 
-```{r}
+```{r arts-attendence-2}
 # combined graph of numeric arts participation variables
 local_arts_train %>%
   select(income, starts_with("n")) %>%
@@ -168,7 +168,7 @@ It's a little hard to see a relationship for a lot of the variables, since so ma
 
 Below is another graph of `income` in relations to more variables indicating the number of times the respondent participated in a specific activity. `nbooks` refers to the number of books the respondent read in the last 12-months, `npark` refers to the number of times the respondent visited a history park/monument in the last twelve months, `ntvart` refers to the number of times the respondent watched a visual arts program on TV/VCR in the last twelve months, `ntvclass` refers to the number of times the respondent watched a classical music program on TV/VCR in the last twelve months, `ntvdance` refers to the number of times a respondent watched a dance program on TV in the last twelve months, `ntvjazz` refers to the number of times a respondent watched a jazz program on TV in th elast twelv months, `ntvmus` refers to the number of times a respondent watched a musical on TV in the last twelve months, `ntvopera` refers to the number of times a respondent watched opera on TV in last twelve months, and `ntvplay` refers to the number of times a respondent watched a play on TV in the last twelve months.
 
-```{r}
+```{r arts-attendence-3}
 # combined graph of numeric arts participation variables 2
 local_arts_train %>%
   select(income, starts_with("n")) %>%
@@ -188,6 +188,57 @@ local_arts_train %>%
 ```
 
 Again, since the majority of people watched or engaged in most of the above arts activities zero times in the last twelve months, there isn't much of a relationship between most of the variables and income, except for `nbooks` and `npark`. There is a very clear relationship between the income of a respondent and the numnber of books they read in the last twelve months, with those with the highest income reading the most and those with the lowest income reading the least. There also seems to be a slight relationship between the income of a respondent and the number of times they visited a historic park or monument, with those with the highest income visiting historic sites slightly more frequently then those with the lowest income.
+
+Another predictor variable related to arts participation/engagement that we think would be interesting to investigate in relation to income is whether or not a person visited the movies in the past twelve months.
+
+```{r cinema}
+local_arts_data %>% 
+  ggplot(aes(income, fill = cinema)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Going to the movies by income",
+       fill = "Have you gone to movie theater\nto see a movie\nin last 12 months?",
+       y = "prop")
+```
+
+The graph pretty clearly shows that more people with higher incomes went to see a movie in the theaters in the last twelve months than people with lower incomes.
+
+Since we've seen in many of the previous graphs, a lot of people have not attended or engaged in arts activities in the last twelve months. It would be important to get a sense of why this is the case, and thus we can take a look at the variable `bar1`, which indicates respondent's first reason for not attending local arts events/not attending them more often.
+
+```{r dist-bar1}
+# distribution of bar1
+local_arts_train %>% 
+  mutate(
+    bar1 = bar1 %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(bar1)) +
+  geom_bar() +
+  coord_flip() +
+  labs(
+    x = "reason for not attending"
+  )
+```
+
+As you can see above, the most common reason for people not attending local arts events more frequently is that they don't have time, followed by the cost of tickets and lack of childcare. It could also be interesting to see how these reasons for not attending local arts events change (or remain the same) across levels of `income`.
+
+```{r}
+# distribution of bar1 by income
+local_arts_train %>% 
+  mutate(
+    bar1 = bar1 %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(bar1)) +
+  geom_bar() +
+  facet_wrap(~ income) +
+  coord_flip() +
+  labs(
+    x = "reason for not attending"
+  )
+```
+
+It seems that across all income levels, lack of time is the primary reason for not attending local arts events more frequently. 
+
 
 ```{r}
 local_arts_train %>%

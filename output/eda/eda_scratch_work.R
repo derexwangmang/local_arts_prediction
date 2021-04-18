@@ -263,3 +263,28 @@ local_arts_train %>%
   labs(
     title = "Frequency of Engaging in/Watching Arts Activities by Income"
   )
+
+# distribution of bar1
+local_arts_train %>% 
+  mutate(
+    bar1 = bar1 %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(bar1)) +
+  geom_bar() +
+  coord_flip() +
+  labs(
+    x = "reason for not attending"
+  )
+
+# distribution of bar1 by income
+local_arts_train %>% 
+  mutate(
+    bar1 = bar1 %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(bar1)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~ income) +
+  labs(
+    x = "reason for not attending"
+  )
