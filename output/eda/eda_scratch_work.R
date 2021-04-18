@@ -12,15 +12,48 @@ set.seed(3206)
 load(file = "data/processed/local_arts_data.Rda")
 
 # Create a Graph of the Outcome Variable ----------------------------------
-local_arts_data %>% 
-  filter(!is.na(income) & income != "Refused" & income != "Don't know") %>% 
+local_arts_data %>%
   ggplot(aes(x = income)) +
-  geom_bar(fill = "#3b4b21") +
+  geom_bar() +
   coord_flip() +
   labs(
     title = "Distribution of Respondent's Household Income"
   ) +
   theme_minimal()
+
+local_arts_data %>% 
+  count(income)
+
+# Only keep observations with values for income
+local_arts_data <- local_arts_data %>% 
+  filter(!is.na(income))
+
+
+# Missingness -------------------------------------------------------------
+# create function to identify columns with missing values
+has_na <- function(x){
+  any(is.na(x))
+}
+
+# graph missingness
+local_arts_data %>%
+  # select only columns that have missing values
+  select_if(has_na) %>%
+  # graph using naniar
+  gg_miss_var()
+
+# table of missingness
+local_arts_data %>%
+  # select only columns that have missing values
+  select_if(has_na) %>%
+  # summary of missing variables
+  miss_var_summary() %>% 
+  print(n = Inf)
+
+# take out variables with a significant amount of missingness
+local_arts_data <- local_arts_data %>% 
+  select(-bar5, -bar4, -mags, -more8, -bar3, -more7, -radio, -more6, 
+         -tvtype, -bar2, -more5, -more4, -more3, -newsp)
 
 # Split Data --------------------------------------------------------------
 # conduct initial split
@@ -33,29 +66,6 @@ local_arts_train <- training(local_arts_split)
 local_arts_test <- testing(local_arts_split)
 
 # More EDA ---------------------------------------------------------------
-# skim entire data-set
-skim_without_charts(local_arts_train)
-
-# create function to identify columns with missing values
-has_na <- function(x){
-  any(is.na(x))
-}
-
-# graph missingness
-local_arts_train %>%
-  # select only columns that have missing values
-  select_if(has_na) %>%
-  # graph using naniar
-  gg_miss_var()
-
-# table of missingness
-local_arts_train %>%
-  # select only columns that have missing values
-  select_if(has_na) %>%
-  # summary of missing variables
-  miss_var_summary() %>% 
-  print(n = Inf)
-
 # income by jazz
 local_arts_data %>% 
   filter(jazz != "(3) Don't know") %>% 
