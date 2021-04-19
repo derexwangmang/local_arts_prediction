@@ -18,6 +18,7 @@ library(tidyverse)
 library(tidymodels)
 library(naniar)
 library(skimr)
+library(cowplot)
 
 # Set Seed
 set.seed(3206)
@@ -35,36 +36,6 @@ In total, there are 5,040 total observations and 95 attributes. 72 of the charac
 load(file = "data/processed/local_arts_data.Rda")
 ```
 
-
-## Outcome Variable
-
-In our predictive modeling project, we will attempt to predict survey respondent's household income, the variable `income`. This is a categorical variable with 9 levels indicating the range of the respondent's household income. Before conducting an initial split on the data into a training and testing set, we wanted to visualize our outcome variable. 
-
-```{r income-distribution}
-# Distribution of income (graph)
-local_arts_data %>%
-  ggplot(aes(x = income)) +
-  geom_bar() +
-  coord_flip() +
-  labs(
-    title = "Distribution of Respondent's Household Income"
-  ) +
-  theme_minimal()
-
-# Table of the levels of income
-local_arts_data %>% 
-  count(income)
-```
-
-As the graph and table above show, there is a significant amount of missingness in the outcome variable, with a total of 915 missing values. Most of this missingness is because participants didn't know their household income or because the respondent refused to answer the question, with some `NA` values being truly missing responses. For the rest of the data, the categories with the highest counts are `$50,000 to $74,000`, `$30,000 to $39,999`, and `$20,000 to $29,999`. Before splitting the data into a training and test set, it would make sense to get rid of the rows that contain missing values, since it would not make sense (nor would it be possible) to predict missing values. The code for that is below.
-
-```{r filter-out-na-income}
-# Only keep observations with values for income
-local_arts_data <- local_arts_data %>% 
-  filter(!is.na(income))
-```
-
-Further, the imbalance between the various classes of `income` prove that it would be important to stratify our initial split (and later our cross-validation) by `income`.
 
 ## Missingness
 
@@ -105,9 +76,38 @@ We decided to keep one variable that had greater than 20% missingness, specifica
 
 For the rest of the variables with missingness at or below 20%, an imputation step will be used to replace those missing values.
 
+## Outcome Variable
+
+In our predictive modeling project, we will attempt to predict survey respondent's household income, the variable `income`. This is a categorical variable with 9 levels indicating the range of the respondent's household income. Before conducting an initial split on the data into a training and testing set, we wanted to visualize our outcome variable. 
+
+```{r income-distribution}
+# Distribution of income (graph)
+local_arts_data %>%
+  ggplot(aes(x = income)) +
+  geom_bar() +
+  coord_flip() +
+  labs(
+    title = "Distribution of Respondent's Household Income"
+  ) +
+  theme_minimal()
+
+# Table of the levels of income
+local_arts_data %>% 
+  count(income)
+```
+
+As the graph and table above show, there is a significant amount of missingness in the outcome variable, with a total of 915 missing values. Most of this missingness is because participants didn't know their household income or because the respondent refused to answer the question, with some `NA` values being truly missing responses. For the rest of the data, the categories with the highest counts are `$50,000 to $74,000`, `$30,000 to $39,999`, and `$20,000 to $29,999`. Before splitting the data into a training and test set, it would make sense to get rid of the rows that contain missing values, since it would not make sense (nor would it be possible) to predict missing values. The code for that is below.
+
+```{r filter-out-na-income}
+# Only keep observations with values for income
+local_arts_data <- local_arts_data %>% 
+  filter(!is.na(income))
+```
+
+
 ## Splitting
 
-We decided to initially split the data into 70% training, and 30% testing. As mentioned before, we are stratifying by `income` due to the class imbalance in this variable. Below is the code for splitting the data.
+We decided to initially split the data into 70% training, and 30% testing. The imbalance between the various classes of `income` shown above prove that it would be important to stratify our initial split (and later our cross-validation) by `income`. Below is the code for splitting the data.
 
 ```{r split-data}
 # Conduct Initial Split
@@ -120,11 +120,9 @@ local_arts_train <- training(local_arts_split)
 
 ## Essential Findings
 
-### Predictor Variables
-
 After performing some initial cleaning and processing of the dataset, there are 74 variables remaining, 73 of which may serve as predictor variables. There are two sets of variables indicating participation in the arts: one set that is categorical, indicating whether or not the participant has gone to the indicated arts event in the last 12 months. The other set is numeric, indicating how many times the participant has gone to the indicated arts event in the last 12 months. Using both sets of variables might be a bit redundant, so we may focus on the numeric set rather than the categorical set, as that would give us a more nuanced look at not only whether or not the participant has been to certain arts events but the *frequency* with which they have attended those events. Their participation in the arts most likely correlates with their income bracket, as high participation in the arts may signal more available time for leisure activities.
 
-#### Activity Frequency Predictor Variables
+### Activity Frequency Predictor Variables
 
 Taking a look at both the relationship between both thee categorical and numeric sets of predictor variables regarding participation in the arts and our outcome variable `income` shows that there is definitely a trend. 
 
@@ -207,7 +205,7 @@ local_arts_data %>%
 
 The graph pretty clearly shows that more people with higher incomes went to see a movie in the theaters in the last twelve months than people with lower incomes.
 
-#### Reasoning Predictor Variables
+### Activity Reasoning Predictor Variables
 
 While the above variables provide broad trends as to the frequency of the participants' attendance to their local arts events, it may be just as important as to understand *why* they have and why they haven't.
 
@@ -252,13 +250,14 @@ Other variables that ask about the reason behind their lack of attendance includ
 - `mostimp`: reason participant did not attend arts events more often
 - `howimp`: how important it is for the participant to attend events
 
-#### Demographic Predictor Variables
+### Demographic Predictor Variables
 
 Another important factor to bear in mind is the participants' demographic information. These variables include:
 - education level
 - gender
 - age
 - household size
+- marital status
 
 Each of these seem as if they could provide valuable insight into the income of the participant. For example, income generally increases with education and age, while a larger household size may indicate higher income with more financial stability.
 
@@ -338,13 +337,124 @@ local_arts_train %>%
 
 The distribution of household sizes is heavily left skewed in all income brackets. As the income bracket increases, the household size increases as well. One noteworthy observation is that one point, specifically located in the income bracket of \$30,000 to \$39,999, appears to be an outlier, with a value of 73 for the household size. In future analysis, the household size for that point may be imputed, or the observation may be removed altogether.
 
+```{r}
+local_arts_train %>%
+  select(income, marital) %>%
+  filter(!is.na(income)) %>%
+  ggplot(aes(marital)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~ income) +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Marital Status across Income Brackets",
+    x = "Count",
+    y = "Marital Status"
+  )
+```
+
+Most participants are married, making up the majority in nearly all income brackets. As the number of household members increases, the income increases as well, demonstrating a positive relationship. This makes sense: married participants have their primary source of income as well as their partner's source of income, leading to a higher household income.
+
 ## Secondary Findings
 
-One characteristic considered as a potential demographic factor was the race. Below is the plot relating race with income.
+The secondary findings mainly consist of variables that were explored in the process of this exploratory data analysis, but fail to present interesting or surprising results.
+
+### Variables without Variance
+
+Using the `caret` package, we used `nearZeroVar()` to identify which variables had little to no variance. Such values would fail to provide meaningful insight or significantly affect the model.
 
 ```{r}
 local_arts_train %>%
-  select(income, educ, race, gender, age, hhsize) %>%
+  select(caret::nearZeroVar(local_arts_train)) %>%
+  colnames()
+```
+
+Thus, these variables should be left out of the dataset and recipe.
+
+### Preferences and Subjective Questions
+
+Many questions revolved around preferences of the participant. One such example is `lisjazz`, which explores whether the participant listened to jazz performances on radio, tapes, or compact discs. A graph of its distribution is below.
+
+```{r listen-dist}
+p1 <- local_arts_train %>%
+  select(starts_with("lis")) %>%
+  ggplot(aes(lisjazz)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Count",
+       y = "Listened to Jazz?")
+
+p2 <- local_arts_train %>%
+  select(starts_with("lis")) %>%
+  ggplot(aes(lisclass)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Count",
+       y = "Listened to Classical?")
+
+p3 <- local_arts_train %>%
+  select(starts_with("lis")) %>%
+  ggplot(aes(lisopera)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Count",
+       y = "Listened to Opera?")
+
+p4 <- local_arts_train %>%
+  select(starts_with("lis")) %>%
+  ggplot(aes(lismus)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Count",
+       y = "Listened to Music?")
+
+p5 <- local_arts_train %>%
+  select(starts_with("lis")) %>%
+  ggplot(aes(lisplay)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Count",
+       y = "Listened to Play?")
+
+plot_grid(p1, p2, p3, p4, p5)
+```
+
+Since the mediums are widely accessible (radio, tapes, or compact discs), whether the participant listened to a type of music seems like it is more about the participant's preference, rather than any meaningful information about their income level. This is also true of the questions that ask about what kind of events the participant would like to attend more of as well.
+
+```{r more-dist}
+p1 <- local_arts_train %>%
+  select(starts_with("more")) %>%
+  ggplot(aes(more1)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Count",
+       y = "I want to attend more...?")
+
+p2 <- local_arts_train %>%
+  select(starts_with("more")) %>%
+  ggplot(aes(more2)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal() +
+  labs(x = "Count",
+       y = "I want to attend more...?")
+
+plot_grid(p1, p2)
+```
+
+### Demographic Variables
+
+One demographic characteristic considered as a potential factor was race. Below is the plot relating race with income.
+
+```{r}
+local_arts_train %>%
+  select(income, race) %>%
   filter(!is.na(income)) %>%
   ggplot(aes(race)) +
   geom_bar() +
@@ -358,14 +468,4 @@ local_arts_train %>%
   )
 ```
 
-The predominate count is `White, not Hispanic`.
-
-
-
-
-Some activities, such as reading books, are widely accessible than others, such as attending a live opera. As such, the expected predictor variables are in the table below.
-
-```{r}
-local_arts_train %>%
-  select(starts_with("n"), hhsize, over18, age, marital, educ, race, income, gender, weight)
-```
+There appears to be little diversity. Instead, the predominate count is `White, not Hispanic`, which far outnumbers the other races.
