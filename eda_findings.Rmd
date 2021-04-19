@@ -35,6 +35,7 @@ In total, there are 5,040 total observations and 95 attributes. 72 of the charac
 load(file = "data/processed/local_arts_data.Rda")
 ```
 
+
 ## Outcome Variable
 
 In our predictive modeling project, we will attempt to predict survey respondent's household income, the variable `income`. This is a categorical variable with 9 levels indicating the range of the respondent's household income. Before conducting an initial split on the data into a training and testing set, we wanted to visualize our outcome variable. 
@@ -55,7 +56,7 @@ local_arts_data %>%
   count(income)
 ```
 
-As the graph and table above show, there is a significant amount of missingness in the outcome variable, with a total of 915 missing values. Most of this missingness is because participants didn't know their household income or because the respondent refused to answer the question, with some `NA` values being truly missing responses. For the rest of the data, the categories with the highest counts are `$50,000 to $74,000`, `$30,000 to $39,999`, and `$20,000 to $29,999`. Before spliting the data into a training and test set, it would make sense to get rid of the rows that contain missing values, since it would not make sense (nor would it be possible) to predict missing values. The code for that is below.
+As the graph and table above show, there is a significant amount of missingness in the outcome variable, with a total of 915 missing values. Most of this missingness is because participants didn't know their household income or because the respondent refused to answer the question, with some `NA` values being truly missing responses. For the rest of the data, the categories with the highest counts are `$50,000 to $74,000`, `$30,000 to $39,999`, and `$20,000 to $29,999`. Before splitting the data into a training and test set, it would make sense to get rid of the rows that contain missing values, since it would not make sense (nor would it be possible) to predict missing values. The code for that is below.
 
 ```{r filter-out-na-income}
 # Only keep observations with values for income
@@ -63,12 +64,11 @@ local_arts_data <- local_arts_data %>%
   filter(!is.na(income))
 ```
 
-
 Further, the imbalance between the various classes of `income` prove that it would be important to stratify our initial split (and later our cross-validation) by `income`.
 
 ## Missingness
 
-There appears to be significant missingness within some characteristics of the data. These are due to three reasons that this missingness occurs:
+There appears to be significant missingness within some characteristics of the data. There are three reasons that this missingness occurs:
 
 - The respondent did not know the answer.
 - The question did not apply to this respondent.
@@ -90,10 +90,10 @@ local_arts_data %>%
   select_if(has_na) %>%
   # summary of missing variables
   miss_var_summary() %>% 
-  print(n = Inf)
+  print(n = 20)
 ```
 
-The table above shows that there are 77 variables with missingness in our data set. Some variables, have a significant amount of missingness. In the table, variables from `bar5` down to `newsp` have over 20% of their values as `NA`. For those variables with more than 20% missingness, it would probably make sense to remove most of them as predictors since more than 20% missingness is a lot to impute. We decided to remove 14 predictors with a significant amount of missingness (`bar5`, `bar4`, `mags`, `more8`, `bar3`, `more7`, `radio`, `more6`, `tvtype`, `bar2`, `more5`, `more4`, `more3`, `newsp`). The code for that is below.
+The truncated table above shows that there are 77 variables with missingness in our data set. In the table, variables from `bar5` down to `newsp` have over 20% of their values as `NA`. For the variables with more than 20% missingness, it would probably make sense to remove most of them, as predictors since more than 20% missingness is a lot to impute. We decided to remove 14 predictors with a significant amount of missingness (`bar5`, `bar4`, `mags`, `more8`, `bar3`, `more7`, `radio`, `more6`, `tvtype`, `bar2`, `more5`, `more4`, `more3`, `newsp`). The code for that is below.
 
 ```{r remove-predictors-na}
 local_arts_data <- local_arts_data %>% 
@@ -101,12 +101,13 @@ local_arts_data <- local_arts_data %>%
          -tvtype, -bar2, -more5, -more4, -more3, -newsp)
 ```
 
+We decided to keep one variable that had greater than 20% missingness, specifically `mostimp`, as that question relates to the most important reason the participant did not attend arts events more often.
 
-For the rest of the variables with missingness at or below 20%, an imputation step will be used to replace those missing values. 
+For the rest of the variables with missingness at or below 20%, an imputation step will be used to replace those missing values.
 
 ## Splitting
 
-We have decided to initially split the data into 70% training, and 30% testing. As mentioned before, we are stratifying by `income` due to the class imbalance in this variable. Below is the code for splitting the data.
+We decided to initially split the data into 70% training, and 30% testing. As mentioned before, we are stratifying by `income` due to the class imbalance in this variable. Below is the code for splitting the data.
 
 ```{r split-data}
 # Conduct Initial Split
@@ -121,7 +122,9 @@ local_arts_train <- training(local_arts_split)
 
 ### Predictor Variables
 
-After performing some initial cleaning and processing of the dataset, there are 74 variables remaining, 73 of which may serve as predictor variables. Of these, the demographic variables (such as education level, `educ`, `race`, `gender`, and `age`) seem as if they could provide valuable insight into the income of the participant, as income generally increases with age and education. Their participation in the arts may also correlate with their income, as high participation in the arts may signal more available time for leisure activities. There are two sets of variables indicating participation in the arts: one set that is categorical, indicating whether or not the participant has gone to the indicated arts event in the last 12 months. The other set is numeric, indicating how many times the participant has gone to the indicated arts event in the last 12 months. Using both sets of variables might be a bit redundant, so we may focus on the numeric set rather than the categorical set, as that would give us a more nuanced look at not only whether or not the participant has been to certain arts events but the *frequency* with which they have attended those events.
+After performing some initial cleaning and processing of the dataset, there are 74 variables remaining, 73 of which may serve as predictor variables. There are two sets of variables indicating participation in the arts: one set that is categorical, indicating whether or not the participant has gone to the indicated arts event in the last 12 months. The other set is numeric, indicating how many times the participant has gone to the indicated arts event in the last 12 months. Using both sets of variables might be a bit redundant, so we may focus on the numeric set rather than the categorical set, as that would give us a more nuanced look at not only whether or not the participant has been to certain arts events but the *frequency* with which they have attended those events. Their participation in the arts most likely correlates with their income bracket, as high participation in the arts may signal more available time for leisure activities.
+
+#### Activity Frequency Predictor Variables
 
 Taking a look at both the relationship between both thee categorical and numeric sets of predictor variables regarding participation in the arts and our outcome variable `income` shows that there is definitely a trend. 
 
@@ -138,14 +141,14 @@ local_arts_train %>%
   theme(axis.text.x = element_text(angle = 45)) +
   labs(
     title = "Attendance at Arts Activities by Income",
-    fill = "have you\nattended\nin last\n 12 months?",
+    fill = "Have you\nattended\n(*) in the last\n12 months?",
     x = "prop"
   )
 ```
 
-As you can see above, for every kind of local art activity, from live jazz, to a museum, to a staged play, the proportion of people who have attended in the last 12 months increases as you move up the income brackets. For each local art activity, the income bracket with the most people who attended in the last 12 months is the `$100,000 or more` income bracket. This makes sense: those with more money have the financial ability and time to attend local arts events. The same pattern seems to hold when we look at the numeric representation of arts attendance and participation.
+As you can see above, for every kind of local art activity, from live jazz, to a museum, to a staged play, the proportion of people who have attended in the last 12 months increases as the income brackets increases. For each local art activity, the income bracket with the most people who attended in the last 12 months is the `$100,000 or more` income bracket. This makes sense: those with more money have the financial ability and time to attend local arts events. The same pattern seems to hold when we look at the numeric representation of arts attendance and participation.
 
-```{r arts-attendence-2}
+```{r arts-attendence-2, warning = F}
 # combined graph of numeric arts participation variables
 local_arts_train %>%
   select(income, starts_with("n")) %>%
@@ -164,11 +167,11 @@ local_arts_train %>%
   )
 ```
 
-It's a little hard to see a relationship for a lot of the variables, since so many people went zero times to a local arts performance. But for some variables, there does seem to be a positive relationship between the frequency of arts attendance and income. For example, people with an income of 100,000 dollars or more and those with an income between 75,000 and 99,999 visited museums in the last twelve months a median of 2 times, while those with lower household incomes visited museums on the whole less frequently. In addition, people with a household income of 20,000 dollars or more had a higher median number of visits to art fairs (`nfair`) than those with an income under 20,000 dollars.
+It's a little hard to see a relationship for a lot of the variables since so many people went zero times to a local arts performance. But for some variables, there does seem to be a positive relationship between the frequency of arts attendance and income. For example, people with an income of 100,000 dollars or more and those with an income between 75,000 and 99,999 visited museums in the last twelve months a median of 2 times, while those with lower household incomes visited museums on the whole less frequently. In addition, people with a household income of 20,000 dollars or more had a higher median number of visits to art fairs (`nfair`) than those with an income under 20,000 dollars.
 
-Below is another graph of `income` in relations to more variables indicating the number of times the respondent participated in a specific activity. `nbooks` refers to the number of books the respondent read in the last 12-months, `npark` refers to the number of times the respondent visited a history park/monument in the last twelve months, `ntvart` refers to the number of times the respondent watched a visual arts program on TV/VCR in the last twelve months, `ntvclass` refers to the number of times the respondent watched a classical music program on TV/VCR in the last twelve months, `ntvdance` refers to the number of times a respondent watched a dance program on TV in the last twelve months, `ntvjazz` refers to the number of times a respondent watched a jazz program on TV in th elast twelv months, `ntvmus` refers to the number of times a respondent watched a musical on TV in the last twelve months, `ntvopera` refers to the number of times a respondent watched opera on TV in last twelve months, and `ntvplay` refers to the number of times a respondent watched a play on TV in the last twelve months.
+Below is another graph of `income` in relations to more variables indicating the number of times the respondent participated in a specific activity in the last 12 months. `nbooks` refers to the number of books the respondent read; `npark` refers to the number of times the respondent visited a history park/monument; `ntvart` refers to the number of times the respondent watched a visual arts program on TV/VCR; `ntvclass` refers to the number of times the respondent watched a classical music program on TV/VCR; `ntvdance` refers to the number of times a respondent watched a dance program on TV; `ntvjazz` refers to the number of times a respondent watched a jazz program on TV; `ntvmus` refers to the number of times a respondent watched a musical on TV; `ntvopera` refers to the number of times a respondent watched opera on TV, and `ntvplay` refers to the number of times a respondent watched a play on TV.
 
-```{r arts-attendence-3}
+```{r arts-attendence-3, warning = F}
 # combined graph of numeric arts participation variables 2
 local_arts_train %>%
   select(income, starts_with("n")) %>%
@@ -187,7 +190,7 @@ local_arts_train %>%
   )
 ```
 
-Again, since the majority of people watched or engaged in most of the above arts activities zero times in the last twelve months, there isn't much of a relationship between most of the variables and income, except for `nbooks` and `npark`. There is a very clear relationship between the income of a respondent and the numnber of books they read in the last twelve months, with those with the highest income reading the most and those with the lowest income reading the least. There also seems to be a slight relationship between the income of a respondent and the number of times they visited a historic park or monument, with those with the highest income visiting historic sites slightly more frequently then those with the lowest income.
+Again, since the majority of people watched or engaged in most of the above arts activities zero times in the last twelve months, there doesn't appear to be much of a relationship between most of the variables and income, except for `nbooks` and `npark`. There is a very clear relationship between the income of a respondent and the number of books they read in the last twelve months, with those with the highest income reading the most and those with the lowest income reading the least. There also seems to be a slight relationship between the income of a respondent and the number of times they visited a historic park or monument, with those with the highest income visiting historic sites slightly more frequently then those with the lowest income.
 
 Another predictor variable related to arts participation/engagement that we think would be interesting to investigate in relation to income is whether or not a person visited the movies in the past twelve months.
 
@@ -204,7 +207,11 @@ local_arts_data %>%
 
 The graph pretty clearly shows that more people with higher incomes went to see a movie in the theaters in the last twelve months than people with lower incomes.
 
-Since we've seen in many of the previous graphs, a lot of people have not attended or engaged in arts activities in the last twelve months. It would be important to get a sense of why this is the case, and thus we can take a look at the variable `bar1`, which indicates respondent's first reason for not attending local arts events/not attending them more often.
+#### Reasoning Predictor Variables
+
+While the above variables provide broad trends as to the frequency of the participants' attendance to their local arts events, it may be just as important as to understand *why* they have and why they haven't.
+
+For instance, we can take a look at the variable `bar1`, which indicates respondent's first reason for not attending local arts events/not attending them more often.
 
 ```{r dist-bar1}
 # distribution of bar1
@@ -217,7 +224,8 @@ local_arts_train %>%
   coord_flip() +
   labs(
     x = "reason for not attending"
-  )
+  ) +
+  theme_minimal()
 ```
 
 As you can see above, the most common reason for people not attending local arts events more frequently is that they don't have time, followed by the cost of tickets and lack of childcare. It could also be interesting to see how these reasons for not attending local arts events change (or remain the same) across levels of `income`.
@@ -234,28 +242,123 @@ local_arts_train %>%
   coord_flip() +
   labs(
     x = "reason for not attending"
-  )
-```
-
-It seems that across all income levels, lack of time is the primary reason for not attending local arts events more frequently. 
-
-
-```{r}
-local_arts_train %>%
-  select(income, hhsize, over18, age, marital, educ, race, income, gender, weight) %>%
-  filter(!is.na(income)) %>%
-  select(income, hhsize) %>%
-  ggplot(aes(hhsize)) +
-  geom_bar() +
-  facet_wrap(~ income, scales = "free") +
+  ) +
   theme_minimal()
 ```
 
+It seems that across all income levels, lack of time is the primary reason for not attending local arts events more frequently.
+
+Other variables that ask about the reason behind their lack of attendance include:
+- `mostimp`: reason participant did not attend arts events more often
+- `howimp`: how important it is for the participant to attend events
+
+#### Demographic Predictor Variables
+
+Another important factor to bear in mind is the participants' demographic information. These variables include:
+- education level
+- gender
+- age
+- household size
+
+Each of these seem as if they could provide valuable insight into the income of the participant. For example, income generally increases with education and age, while a larger household size may indicate higher income with more financial stability.
+
+Below is a plot of the highest education level by income.
+
+```{r dist-educ-income}
+local_arts_train %>%
+  select(income, educ, race, gender, age, hhsize) %>%
+  filter(!is.na(income)) %>%
+  ggplot(aes(educ)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~ income) +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Education Levels across Income Brackets",
+    x = "Education Level",
+    y = "Count"
+  )
+```
+
+As hypothesized, there appears to be a correlation between education level and income. For example, the count of college-educated participants increases with income while the high school count decreases with income.
+
+The next demographic factor is gender. (Race was included as a secondary finding, rather than a primary finding.)
+
+```{r dist-educ-gender}
+local_arts_train %>%
+  select(income, educ, gender, age, hhsize) %>%
+  filter(!is.na(income)) %>%
+  ggplot(aes(gender)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~ income) +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Gender across Income Brackets",
+    x = "Gender",
+    y = "Count"
+  )
+```
+
+Across nearly all the income brackets, the number of females outnumber the number of males, while the proportion of males within each section appears to increase as the income increases.
+
+```{r dist-educ-age, warning = F}
+local_arts_train %>%
+  select(income, educ, gender, age, hhsize) %>%
+  filter(!is.na(income)) %>%
+  ggplot(aes(age)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~ income) +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Age across Income Brackets",
+    x = "Age",
+    y = "Count"
+  )
+```
+
+The distribution of ages is unimodal in all income brackets, with many of the graphs having a left tail. As the income bracket increases, the plot appears to move "upwards." In other words, the age increases as the income increases, indicating a positive relationship between the two. This would make sense: younger adults tend to have less money due to their lack of experience. Older adults have more experience in the workforce and may be more financially responsible, leading to a higher income.
+
+```{r dist-educ-hhsize, warning = F}
+local_arts_train %>%
+  select(income, educ, gender, age, hhsize) %>%
+  filter(!is.na(income)) %>%
+  ggplot(aes(hhsize)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~ income, scales = "free") +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Household Size across Income Brackets",
+    x = "Household Size",
+    y = "Count"
+  )
+```
+
+The distribution of household sizes is heavily left skewed in all income brackets. As the income bracket increases, the household size increases as well. One noteworthy observation is that one point, specifically located in the income bracket of \$30,000 to \$39,999, appears to be an outlier, with a value of 73 for the household size. In future analysis, the household size for that point may be imputed, or the observation may be removed altogether.
+
 ## Secondary Findings
 
+One characteristic considered as a potential demographic factor was the race. Below is the plot relating race with income.
 
+```{r}
+local_arts_train %>%
+  select(income, educ, race, gender, age, hhsize) %>%
+  filter(!is.na(income)) %>%
+  ggplot(aes(race)) +
+  geom_bar() +
+  coord_flip() +
+  facet_wrap(~ income) +
+  theme_minimal() +
+  labs(
+    title = "Race by Income",
+    x = "Count",
+    y = "Race"
+  )
+```
 
-
+The predominate count is `White, not Hispanic`.
 
 
 
