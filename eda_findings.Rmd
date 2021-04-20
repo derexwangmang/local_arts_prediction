@@ -290,6 +290,22 @@ local_arts_train %>%
 
 As hypothesized, there appears to be a correlation between education level and income. The proportion of people with bachelor's degrees and with grad degrees increases as income increases.
 
+Since there are multiple levels of `educ`, it would make sense to visualize the distribution of this predictor.
+
+```{r}
+# distributin of educ
+local_arts_train %>% 
+  mutate(
+    educ = educ %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(educ)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal()
+```
+
+The levels with the highest counts are `Some college`, `High school`, and `Bachelors degree`. There are a few levels, `Some grad. school`, `Vocational school`, `Grades k-8`, `No school`, and `Other`, that have very few values. It might make sense to combine these into a single other level using `step_other` in our recipe, or employing the `step_nzv` or `step_zv` functions to deal with zero-variance predictors.
+
 The next demographic factor is gender. (Race was included as a secondary finding, rather than a primary finding.)
 
 ```{r dist-educ-gender}
@@ -362,6 +378,64 @@ local_arts_train %>%
 
 Clearly, as the the income increases, so do the proportion of married couples. This makes sense: married participants have their primary source of income as well as their partner's source of income, leading to a higher household income.
 
+The last demographic variable we wanted to explore with `income` is `race`.
+
+```{r}
+local_arts_train %>%
+  select(income, race) %>%
+  filter(!is.na(income)) %>%
+  ggplot(aes(income, fill = race)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  theme_minimal() +
+  labs(
+    title = "Race by Income",
+    fill = "Count",
+    y = "prop"
+  )
+```
+
+The graph above shows that in all income brackets, the majority of respondents were `White, not Hispanic`. However, you can tell that there is a slight increase in the  proportion of white people as the income bracket increases, and a subsequent decrease in people of color, particularly black folks, as the income bracket increases. This, sadly, is an unsurprising trend given the perpetuation of systemic racism in America.
+
+It would also make sense to look at the distribution of `race` by itself given the overrepresentation of `White, not Hispanic` folks in the above graph.
+
+```{r}
+# distribution of race
+local_arts_train %>% 
+  mutate(
+    race = race %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(race)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal()
+```
+
+White folks vastly outnumber folks of other races in this dataset. There is very little diversity in this variable, which will be a problem when dummy encoding. It would make sense to either combine levels of this variable using a `step_other` category in our recipe, or employing `step_nzv` or `step_zv` to remove near-zero or zero-variance levels.
+
+Since we've looked at race and income, it would also be interesting to visualize the relationship between race and arts attendance, focusing specifically on live jazz, classical music, and museums.
+
+```{r}
+# combined graph of categorical arts participation variables
+local_arts_train %>% 
+  select(race, jazz, classic, museum) %>%
+  gather(-race, key = "var", value = "value") %>%
+  ggplot(aes(x = race, fill = value)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  facet_wrap(~ var, scales = "free", nrow = 2) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Attendance at Arts Activities by Race",
+    fill = "Have you\nattended\n(*) in the last\n12 months?",
+    x = "prop"
+  )
+```
+
+The graph shows that a slightly higher proportion of white folks attended live classical music concerts in the last 12 months than people of other racial identities. A slightly higher proportion of black folks, on the other hand, attended live jazz concerts in the last 12 months. All Alaskan Native folks attended museums in the last 12 months, but this is rather misleading given there are so few Alaskan Native folks in the data set (as seen in the distribution of race graph above). After that, it appears that South American and white folks attended museums at a slightly higher rate than other people.
+
+
 ## Secondary Findings
 
 The secondary findings mainly consist of variables that were explored in the process of this exploratory data analysis, but fail to present interesting or surprising results.
@@ -380,7 +454,7 @@ Thus, these variables should be left out of the dataset and recipe.
 
 ### Preferences and Subjective Questions
 
-Many questions revolved around preferences of the participant. One such example is `lisjazz`, which explores whether the participant listened to jazz performances on radio, tapes, or compact discs. A graph of its distribution is below.
+Many questions revolved around musical/artistic preferences of the participant. One such example is `lisjazz`, which explores whether the participant listened to jazz performances on radio, tapes, or compact discs in the last 12 months. There are 4 other variables like this, but instead recording whether or not a respondent listened to classical, opera, general music or a play on the radio, tapes or compact discs in the last 12 months. A graph of the counts for these variables is below.
 
 ```{r listen-dist}
 p1 <- local_arts_train %>%
@@ -431,7 +505,7 @@ p5 <- local_arts_train %>%
 plot_grid(p1, p2, p3, p4, p5)
 ```
 
-Since the mediums are widely accessible (radio, tapes, or compact discs), whether the participant listened to a type of music seems like it is more about the participant's preference, rather than any meaningful information about their income level. This is also true of the questions that ask about what kind of events the participant would like to attend more of as well.
+Since the mediums are widely accessible (radio, tapes, or compact discs), whether the participant listened to a type of music seems like it is more about the participant's preference, rather than any meaningful information about their income level. This is also true of the questions that ask about what kind of events the participant would like to attend more of. The first graph below represents the first type of art or performance a respondent would like to attend more of, while the second graph below representst the second type of art or performance a respondent would like to attend more of.
 
 ```{r more-dist}
 p1 <- local_arts_train %>%
