@@ -7,7 +7,7 @@ output:
     toc: true
     toc_float: true
     highlight: "tango"
-    code-folding: true
+    code_folding: hide
 editor_options: 
   chunk_output_type: console
 ---
@@ -205,7 +205,7 @@ local_arts_data %>%
        y = "prop")
 ```
 
-The graph pretty clearly shows that more people with higher incomes went to see a movie in the theaters in the last twelve months than people with lower incomes.
+The graph pretty clearly shows that more people with higher incomes went to see a movie in the theaters in the last twelve months than people with lower incomes. This would be an important predictor variable to include along with the other variables above regarding participation in/engagement with the arts.
 
 ### Activity Reasoning Predictor Variables
 
@@ -529,24 +529,4 @@ p2 <- local_arts_train %>%
 plot_grid(p1, p2)
 ```
 
-### Demographic Variables
 
-One demographic characteristic considered as a potential factor was race. Below is the plot relating race with income.
-
-```{r}
-local_arts_train %>%
-  select(income, race) %>%
-  filter(!is.na(income)) %>%
-  ggplot(aes(race)) +
-  geom_bar() +
-  coord_flip() +
-  facet_wrap(~ income) +
-  theme_minimal() +
-  labs(
-    title = "Race by Income",
-    x = "Count",
-    y = "Race"
-  )
-```
-
-There appears to be little diversity. Instead, the predominate count is `White, not Hispanic`, which far outnumbers the other races.
