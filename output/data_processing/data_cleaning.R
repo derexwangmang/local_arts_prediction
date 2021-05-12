@@ -14,7 +14,8 @@ local_arts_data <- as_tibble(da35586.0001)
 
 # Dropping Variables ------------------------------------------------------
 
-# Use a Loop To Make Appropriate Missing Values Zero and Track "W" Questions
+# Use a loop to make appropriate missing values zero and track "w" variables 
+# (variables indicating where participant saw performance)
 all_col_names <- colnames(local_arts_data)
 dropped_cols <- c()
 
@@ -30,14 +31,13 @@ for (i in 1:(length(all_col_names) - 1)) {
   }
 }
 
-# Dropping Questions About Where/What Facility Participant Saw Performance
+# dropping questions about where/what facility participant saw performance
 local_arts_data <- local_arts_data %>%
   select(-dropped_cols)
 
 # Clean Variable Names ----------------------------------------------------
 local_arts_data <- local_arts_data %>% 
   clean_names()
-
 
 # Renaming Levels of Outcome ----------------------------------------------
 local_arts_data <- local_arts_data %>% 
@@ -56,7 +56,6 @@ local_arts_data <- local_arts_data %>%
        "Under $10,000" = "(01) Under $10,000"
        )
   )
-
 
 # Categorizing Variables as NA --------------------------------------------
 
