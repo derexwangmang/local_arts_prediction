@@ -1,0 +1,16 @@
+---
+title: 'Local Arts in America: A Predictive Modeling Project'
+author: "Elena Andrews and Derex Wangmang"
+date: "6/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The arts in all forms, from live jazz, to operas, plays, classical symphonies, musicals, artwork displayed in museums, and dance performances, is a ubiquitous facet of modern life. Museums, theaters, small music venues and symphony halls are present in cities across the country and the world. They are often integral parts of how we define both our residential spaces and our culture, because of the ways in which participation in and exposure to the arts bring joy, meaning, and community into our lives. A pressing subject that we as data scientists, lovers of the arts, and American citizens wish to investigate, however, is the link between participation in the arts in America and various demographic and social factors, particularly income. That is why for our predictive modeling project, we have decided to utilize a data-set from the Local Area Arts Participation study from 1992. This study was funded by the National Endowment for the Arts (Research Division) and conducted by Abt Associates of Cambridge, MA. It contains information on whether and how often Americans attended and participated in various kinds of local art, including jazz concerts, ballet performances, etc. It also contains various demographic characteristics of the respondents. In collecting the data, Abt Associates randomly selected Americans from 12 localities via a random-digit-dialing sampling methodology and contacted them by phone for this survey.
+
+Thus, it is our intention to utilize the various variables regarding arts participation in this data-set, as well as demographic information like race, gender, and age, to predict the household income of the respondents in this survey. Hopefully, through the process of predicting respondent income, we can better understand who attends arts performances and exhibits, how often they do, and why other people don't in order to eventually make the arts more accessible and appealing to *everyone*.
