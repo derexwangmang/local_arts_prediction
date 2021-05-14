@@ -1,0 +1,41 @@
+---
+title: 'Local Arts in America: A Predictive Modeling Project'
+author: "Elena Andrews and Derex Wangmang"
+date: "6/9/2021"
+output: 
+ html_document:
+    toc: true
+    toc_float: true
+    highlight: "tango"
+    code_folding: hide
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Load Necessary Packages
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+```
+
+## Introduction
+
+The arts in all forms, from live jazz, to operas, plays, classical symphonies, musicals, and dance performances, are a ubiquitous facet of modern life. Museums, theaters, small music venues and symphony halls are present in cities across the country and the world. They are often integral parts of how we define both our residential spaces and our culture, because of the ways in which participation in and exposure to the arts bring joy, meaning, and community into our lives. A pressing subject that we as data scientists, lovers of the arts, and American citizens wish to investigate, however, is the link between participation in the arts in America and various demographic and social factors, particularly income. That is why for our predictive modeling project, we have decided to utilize a data-set from the Local Area Arts Participation study from 1992. This study was funded by the National Endowment for the Arts (Research Division) and conducted by Abt Associates of Cambridge, MA. It contains information on whether and how often Americans attended and participated in various kinds of local art, including jazz concerts, ballet performances, etc. It also contains various demographic characteristics of the respondents. In collecting the data, Abt Associates randomly selected 5,040 Americans from 12 localities (Broward County, Chicago, Dade County, Las Vegas, Pittsburgh, Reno, Rural Nevada, San Jose, Seattle, Sedona, Winston-Salem) via a random-digit-dialing sampling methodology and contacted them by phone for this survey, .
+
+Thus, it is our intention to utilize the various variables regarding arts participation in this data-set, as well as demographic information like race, gender, and age, to predict the household income of the respondents in this survey. Hopefully, through the process of predicting respondent income, we can better understand who attends arts performances and exhibits, how often they do, and why other people don't in order to eventually make the arts more accessible and appealing to *everyone*.
+
+## Data Overview and Missingness
+
+The data from the Local Area Arts Participation study was downloaded from the National Archive of Data on Arts and Culture (see appendix for citation). It required some minor cleaning before it was ready for use in this project. This cleaning involved first converting the data into a tibble format. We also had to change data values from `NA` to zero in certain variables in which, given the context, this made more sense. (For example, those respondents who said they had not attended a jazz concert in the last 12 months should have a corresponding value of zero, rather than just `NA`, for the next variable/question, in which the respondents were asked how many *times* they attended a jazz concert in the last 12 months. This was the case for all similarly formatted pairs of variables.) Further, in all categorical variables, we decided to convert levels of `Don't know` and `Refused` to `NA`. Also, for numeric variables, missing values were coded as numbers (as 98 and 99) and thus we had to be sure to correct that in order to read the data correctly. We also made a few other minor adjustments to the data, such as dropping a few variables that we knew from the get-go would be irrelevant to our project, re-coding the names of the levels of `income` (our outcome variable) for easier readability, and cleaning the names of our variables to be in snake case.
+
+After cleaning, we wrote out our processed data-set into an .rda file, which is read in below. The data is named `local_arts_data`. There are 5,040 total observations and 88 attributes. 65 of the characteristics are factored data while the other 23 are numeric data. The categorical characteristics generally involve whether the respondent attended or participated in local art, as well as demographic data. The numerical features include the number of times the respondent attended that specific event as well as numeric demographic data.
+
+```{r load-data}
+# Load the Data
+load(file = "data/processed/local_arts_data.Rda")
+```
