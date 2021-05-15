@@ -8,6 +8,20 @@ set.seed(3206)
 # Data Loading ---------------------------------------------------------------
 load(file = "data/processed/local_arts_data.Rda")
 
+
+# Remove NA Values of Income ----------------------------------------------
+local_arts_data <- local_arts_data %>% 
+  filter(!is.na(income))
+
+
+# Removing Unwanted Columns -----------------------------------------------
+local_arts_data <- local_arts_data %>% 
+  # removing variables with over 20% missingness
+  select(-bar5, -bar4, -mags, -more8, -bar3, -more7, -radio, -more6, 
+         -tvtype, -bar2, -more5, -more4, -more3, -newsp) %>% 
+  # remove variables with no variance
+  select(-caseid, -site, -abtid, -exchange, -source2, -source3, -source4, -source5)
+
 # Data Splitting ----------------------------------------------------------
 # conduct initial split
 local_arts_split <- initial_split(data = local_arts_data, prop = 0.7, strata = income)
