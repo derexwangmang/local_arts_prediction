@@ -15,7 +15,7 @@ en_recipe <-
   # set outcome variable (income) and predictors (all other variables)
   recipe(income ~ ., data = local_arts_train) %>% 
   # impute missing data
-  step_bagimpute(all_predictors()) %>%
+  step_impute_bag(all_predictors()) %>%
   # Yeo-Johnson transform numeric variables to deal with skewness
   step_YeoJohnson(all_numeric()) %>% 
   # create an other category for infrequently occuring levels
@@ -27,7 +27,7 @@ en_recipe <-
   # normalize all predictors
   step_normalize(all_predictors()) %>% 
   # remove zero-variance predictors
-  step_zv()
+  step_zv(all_predictors())
 
 # Model -------------------------------------------------------------------
 en_model <-
