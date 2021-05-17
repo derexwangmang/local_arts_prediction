@@ -17,13 +17,13 @@ en_recipe <-
   # impute missing data
   step_impute_bag(all_predictors()) %>%
   # Yeo-Johnson transform numeric variables to deal with skewness
-  step_YeoJohnson(all_numeric()) %>% 
+  step_YeoJohnson(all_numeric()) %>%
   # create an other category for infrequently occuring levels
   # of educ and race
   step_other(educ, threshold = 0.01) %>% 
   step_other(race, threshold = 0.01) %>% 
   # dummy encode categorical predictors
-  step_dummy(all_nominal()) %>% 
+  step_dummy(all_nominal(), one_hot = TRUE) %>% 
   # normalize all predictors
   step_normalize(all_predictors()) %>% 
   # remove zero-variance predictors
@@ -35,7 +35,7 @@ en_model <-
   # to optimize
   multinom_reg(penalty = tune(), mixture = tune()) %>% 
   # set underlying engine
-  set_engine("glmnet") %>% 
+  set_engine("glmnet")
 
 # Workflow ----------------------------------------------------------------
 en_workflow <-
@@ -55,7 +55,7 @@ en_grid <- grid_regular(en_params, levels = 7)
 # Tune --------------------------------------------------------------------
 en_tuned <- en_workflow %>% 
   # indicate folds object, and grid object
-  tune_grid(local_arts_folds, grid = en_grid)
+  tune_grid(local_arts_fold, grid = en_grid)
 
 # Write Out ---------------------------------------------------------------
 write_rds(en_tuned, en_model, en_workflow, "en_tuned.rds")

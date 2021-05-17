@@ -1,7 +1,7 @@
 # Load Packages -----------------------------------------------------------
 library(tidyverse)
 library(tidymodels)
-library(glmnet)
+library(xgboost)
 
 # Set Seed ----------------------------------------------------------------
 set.seed(399399)
@@ -23,7 +23,7 @@ bt_recipe <-
   step_other(educ, threshold = 0.01) %>%
   step_other(race, threshold = 0.01) %>%
   # dummy encode categorical predictors
-  step_dummy(all_nominal()) %>%
+  step_dummy(all_nominal(), one_hot = TRUE) %>%
   # normalize all predictors
   step_normalize(all_predictors()) %>%
   # remove zero-variance predictors
@@ -51,7 +51,7 @@ bt_workflow <-
 
 # Parameter Object --------------------------------------------------------
 bt_params <- parameters(bt_workflow) %>%
-  update(mtry = mtry(range = c(2, 149)),
+  update(mtry = mtry(range = c(2, 120)),
          learn_rate = learn_rate(range = c(-1, 0.01)))
 
 # Create Regular Grid -----------------------------------------------------
