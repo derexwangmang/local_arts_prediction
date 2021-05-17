@@ -1,7 +1,8 @@
 # Load Necessary Packages ------------------------------------------------
 library(tidyverse)
 library(janitor)
-
+library(labelled)
+library(haven)
 
 # Load Data ---------------------------------------------------------------
 load(file = "data/unprocessed/local_arts_data.rda")
@@ -10,7 +11,7 @@ load(file = "data/unprocessed/local_arts_data.rda")
 # Make Data a Tibble ------------------------------------------------------
 local_arts_data <- as_tibble(da35586.0001)
 
-
+attr(local_arts_data, 'variable.labels') <- NULL
 
 # Dropping Variables ------------------------------------------------------
 

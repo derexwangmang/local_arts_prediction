@@ -23,7 +23,7 @@ en_recipe <-
   step_other(educ, threshold = 0.01) %>% 
   step_other(race, threshold = 0.01) %>% 
   # dummy encode categorical predictors
-  step_dummy(all_nominal(), one_hot = TRUE) %>% 
+  step_dummy(all_nominal(), -all_outcomes(), one_hot = TRUE) %>% 
   # normalize all predictors
   step_normalize(all_predictors()) %>% 
   # remove zero-variance predictors
