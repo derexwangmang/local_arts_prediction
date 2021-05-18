@@ -58,7 +58,7 @@ en_tuned <- en_workflow %>%
   tune_grid(local_arts_fold, grid = en_grid)
 
 # Write Out ---------------------------------------------------------------
-write_rds(en_tuned, en_model, en_workflow, "en_tuned.rds")
+save(en_tuned, en_model, en_workflow, file = "output/model_set_up/en_tuned.rda")
 
 
 
