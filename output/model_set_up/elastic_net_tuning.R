@@ -23,7 +23,7 @@ en_recipe <-
   step_other(educ, threshold = 0.01) %>% 
   step_other(race, threshold = 0.01) %>% 
   # dummy encode categorical predictors
-  step_dummy(all_nominal(), -all_outcomes(), one_hot = TRUE) %>% 
+  step_dummy(all_nominal(), -all_outcomes()) %>% 
   # normalize all predictors
   step_normalize(all_predictors()) %>% 
   # remove zero-variance predictors
@@ -58,7 +58,7 @@ en_tuned <- en_workflow %>%
   tune_grid(local_arts_fold, grid = en_grid)
 
 # Write Out ---------------------------------------------------------------
-save(en_tuned, en_model, en_workflow, file = "output/model_set_up/en_tuned.rda")
+save(en_tuned, en_recipe, en_model, en_workflow, file = "output/model_set_up/en_tuned.rda")
 
 
 
