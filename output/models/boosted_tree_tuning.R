@@ -23,7 +23,7 @@ bt_recipe <-
   step_other(educ, threshold = 0.01) %>%
   step_other(race, threshold = 0.01) %>%
   # dummy encode categorical predictors
-  step_dummy(all_nominal(), one_hot = TRUE) %>%
+  step_dummy(all_nominal(), -all_outcomes(), one_hot = TRUE) %>%
   # normalize all predictors
   step_normalize(all_predictors()) %>%
   # remove zero-variance predictors
@@ -40,7 +40,7 @@ bt_model <-
   # set underlying engine
   set_engine("xgboost")
 
-  # Workflow ----------------------------------------------------------------
+# Workflow ----------------------------------------------------------------
 bt_workflow <-
   # establish workflow
   workflow() %>%
@@ -55,13 +55,12 @@ bt_params <- parameters(bt_workflow) %>%
          learn_rate = learn_rate(range = c(-1, 0.01)))
 
 # Create Regular Grid -----------------------------------------------------
-bt_grid <- grid_regular(bt_params, levels = 1)
+bt_grid <- grid_regular(bt_params, levels = 5)
 
 # Tune --------------------------------------------------------------------
-bt_tuned <- bt_workflow %>%
+bt_tuned <- bt_workflow %>% 
   # indicate folds object, and grid object
   tune_grid(local_arts_fold, grid = bt_grid)
 
 # Write Out ---------------------------------------------------------------
-write_rds(bt_tuned, bt_model, bt_workflow, "model_results/bt_tuned.rds")
-
+save(bt_tuned, bt_model, bt_workflow, file = "output/model_set_up/bt_tuned_non_parallel.rda")
