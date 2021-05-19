@@ -30,7 +30,6 @@ knn_recipe <-
   # remove zero-variance predictors
   step_zv(all_predictors())
 
-
 # Model -------------------------------------------------------------------
 knn_model <-
   # establish model and set parameters to tune
@@ -52,7 +51,7 @@ knn_workflow <-
 
 # Establish Parameter Object ----------------------------------------------
 knn_params <- parameters(knn_workflow) %>% 
-  update(neighbors = neighbors(range = c(0, 30)))
+  update(neighbors = neighbors(range = c(3, 30)))
 
 # Establish Grid ----------------------------------------------------------
 knn_grid <- grid_regular(knn_params, levels = 20)
@@ -75,7 +74,7 @@ knn_tuned <- knn_workflow %>%
   )
 
 # Write out--------------------------
-save(knn_tuned, knn_recipe, knn_model, knn_workflow, file = "output/models/knn_res.rda")
+save(knn_tuned, knn_recipe, knn_model, knn_workflow, file = "output/models/knn_tuned.rda")
 
 
 
