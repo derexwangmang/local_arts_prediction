@@ -74,4 +74,4 @@ rf_tuned <- rf_workflow %>%
   tune_grid(local_arts_fold, grid = rf_grid, control = parallel_everything)
 
 # Write Out ---------------------------------------------------------------
-save(rf_model, rf_workflow, rf_recipe, rf_tuned, file = "output/model_set_up/rf_tuned.rda")
+save(rf_model, rf_workflow, rf_recipe, rf_tuned, file = "output/models/rf_tuned.rda")

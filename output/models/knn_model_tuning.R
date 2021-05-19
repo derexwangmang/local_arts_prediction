@@ -1,17 +1,18 @@
 # Load Packages -----------------------------------------------------------
 library(tidyverse)
 library(tidymodels)
-library(glmnet)
+library(stacks)
+library(kknn)
 
 # Set Seed ----------------------------------------------------------------
-set.seed(399399)
+set.seed(5252)
 
-# Load Necessary Files ----------------------------------------------------
+# Load Necessary Files --------------------------------------------------
 load(file = "data/processed/local_arts_fold.rda")
 load(file  = "data/processed/local_arts_train.rda")
 
 # Recipe ------------------------------------------------------------------
-en_recipe <-
+knn_recipe <- 
   # set outcome variable (income) and predictors (all other variables)
   recipe(income ~ ., data = local_arts_train) %>% 
   # impute missing data
@@ -29,36 +30,53 @@ en_recipe <-
   # remove zero-variance predictors
   step_zv(all_predictors())
 
+
 # Model -------------------------------------------------------------------
-en_model <-
-  # specify model type and parameters
-  # to optimize
-  multinom_reg(penalty = tune(), mixture = tune()) %>% 
+knn_model <-
+  # establish model and set parameters to tune
+  nearest_neighbor(neighbors = tune()) %>% 
   # set underlying engine
-  set_engine("glmnet")
+  set_engine("kknn") %>% 
+  # set mode of the model
+  set_mode("classification")
 
 # Workflow ----------------------------------------------------------------
-en_workflow <-
+knn_workflow <- 
   # establish workflow
   workflow() %>% 
-  # add model
-  add_model(en_model) %>% 
   # add recipe
-  add_recipe(en_recipe)
+  add_recipe(knn_recipe) %>% 
+  # add model
+  add_model(knn_model)
 
-# Parameter Object --------------------------------------------------------
-en_params <- parameters(en_workflow)
 
-# Create Regular Grid -----------------------------------------------------
-en_grid <- grid_regular(en_params, levels = 7)
+# Establish Parameter Object ----------------------------------------------
+knn_params <- parameters(knn_workflow) %>% 
+  update(neighbors = neighbors(range = c(0, 30)))
+
+# Establish Grid ----------------------------------------------------------
+knn_grid <- grid_regular(knn_params, levels = 20)
 
 # Tune --------------------------------------------------------------------
-en_tuned <- en_workflow %>% 
-  # indicate folds object, and grid object
-  tune_grid(local_arts_fold, grid = en_grid)
+# create control object using stack function
+# control_stack_grid() >> tells the tuning grid to keep 
+# predictions and workflow
 
-# Write Out ---------------------------------------------------------------
-save(en_tuned, en_recipe, en_model, en_workflow, file = "output/models/en_tuned.rda")
+# using this because this model will be used in an ensemble
+
+control_grid <- control_stack_grid()
+
+# tune
+knn_tuned <- knn_workflow %>%
+  tune_grid(
+    resamples = local_arts_fold,
+    grid = knn_grid,
+    control = control_grid
+  )
+
+# Write out--------------------------
+save(knn_tuned, knn_recipe, knn_model, knn_workflow, file = "output/models/knn_res.rda")
+
 
 
 
