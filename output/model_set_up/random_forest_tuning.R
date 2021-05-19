@@ -31,7 +31,7 @@ rf_model <-
   # specify the model
   rand_forest(mtry = tune(),
               min_n = tune(),
-              trees = 600) %>%
+              trees = 500) %>%
   # set the underlying engine
   set_engine("ranger", importance = "impurity") %>%
   # set the mode (model outcome)
@@ -59,7 +59,7 @@ rf_params
 
 # Grid --------------------------------------------------------------------
 # create a regular grid
-rf_grid <- grid_regular(rf_params, levels = 6)
+rf_grid <- grid_regular(rf_params, levels = 5)
 
 # view grid
 rf_grid
