@@ -4,6 +4,9 @@ library(tidymodels)
 library(stacks)
 library(earth)
 
+# handle common conflicts
+tidymodels_prefer()
+
 # Set Seed ----------------------------------------------------------------
 set.seed(1717)
 
@@ -35,11 +38,10 @@ mars_recipe <-
 mars_model <-
   # specify model type and parameters to optimize
   mars(num_terms = tune(),
-       prod_degree = tune()) %>% 
+       prod_degree = tune(),
+       mode = "classification") %>% 
   # set underlying engine/package
-  set_engine("earth") %>% 
-  # set mode
-  set_mode("classification")
+  set_engine("earth") 
 
 # Workflow ----------------------------------------------------------------
 mars_workflow <-
@@ -64,8 +66,6 @@ mars_grid <- grid_regular(mars_params, levels = 10)
 # create control object using stack function
 # control_stack_grid() >> tells the tuning grid to keep 
 # predictions and workflow
-
-# using this because this model will be used in an ensemble
 
 control_grid <- control_stack_grid()
 

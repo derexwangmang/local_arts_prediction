@@ -21,6 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```{r}
 library(tidyverse)
 library(tidymodels)
+library(naniar)
 ```
 
 ## Introduction
@@ -38,4 +39,91 @@ After cleaning, we wrote out our processed data-set into an .rda file, which is 
 ```{r load-data}
 # Load the Data
 load(file = "data/processed/local_arts_data.Rda")
+```
+
+After reading in the data, we performed an exploration of missingness. The results in the form of a table and a graph are shown below.
+
+```{r, message = FALSE, fig.height=8}
+# Create function to select columns with missing values
+has_na <- function(x){
+  any(is.na(x))
+}
+
+# table of missingness
+local_arts_data %>%
+  # select only columns that have missing values
+  select_if(has_na) %>%
+  # summary of missing variables (from naniar)
+  miss_var_summary() %>% 
+  print(n = Inf)
+
+# graph missingness
+local_arts_data %>% 
+  # select only columns that have missing values
+  select_if(has_na) %>% 
+  # create missingness graph (from naniar)
+  gg_miss_var()
+```
+
+80 of the 88 variables in our data-set contain missingness, some with a considerable amount of missingness. As can be seen in the table, over 20% of the values of variables from `bar5` down to `moremost` are `NA`. That's 18 variables with more than 20% of their values missing. The majority of the variables with missingness, however, do not have more than 20% of their values missing. We postulated that there are three reasons that this missingness occurs:
+
+- The respondent did not know the answer.
+- The question did not apply to this respondent.
+- The respondent refused to answer the question.
+
+The majority of NA values are due to the second reason—that the question did not apply to the respondent. For instance, the columns with the most missing values, `bar5` and `bar4`, ask about the fourth and fifth reasons for why the respondent did not attend cultural and artistic events more often. However, the previous three questions, `bar1`, `bar2`, and `bar3`, ask the same question, and it's likely that most respondents didn't have more than three reasons for not attending more cultural/artistic events. Thus, variables `bar5` and `bar4` did not apply to the respondent given that their reasons for not attending more cultural/artistic events were covered in their responses to `bar1`, `bar2`, and `bar3`. Another example is `mags`, which asks what magazines the respondent read to learn about art events in the community. The response that a person gives to this question would be dependent whether the respondent read magazines and cited them as a source for learning about art events *in the first place*  (ie, their responses to the `source` variables, which as where a respondent learned about arts events in their community). Thus, if people didn't learn about arts events through magazines (which clearly few people did given how many missing values this variable has), then they would not respond to this question and their value for this variable would be `NA`. For those predictors with missing values that do not fall under the category of the question not applying to the respondent, it is more likely that the respondent simply did not know the answer to the question/how to respond to the question than that they refused to answer the question.
+
+For the variables with more than 20% missingness, we decided it would make sense to remove most of them, as more than 20% of observations are a lot to impute. We decided to remove 14 predictors with a significant amount of missingness: `bar5`, `bar4`, `mags`, `more8`, `bar3`, `more7`, `radio`, `more6`, `tvtype`, `bar2`, `more5`, `more4`, `more3`, `newsp`. The code for that is below.
+
+```{r remove-predictors-na}
+local_arts_data <- local_arts_data %>% 
+  select(-bar5, -bar4, -mags, -more8, -bar3, -more7, -radio, -more6, 
+         -tvtype, -bar2, -more5, -more4, -more3, -newsp)
+```
+
+We decided to keep one variable that had greater than 20% missingness, specifically `mostimp`, as that question relates to the most important reason the participant did not attend arts events more often.
+
+For the rest of the variables with missingness at or below 20%, an imputation step will be used to replace those missing values in our model recipes.
+
+## Outcome Variable
+
+In our predictive modeling project, we will attempt to predict the survey respondent's household income, the variable `income`, using as predictors the other variables in the data-set, which are related to arts attendence and demographic information. `income` is a categorical variable with 9 levels indicating the range of the respondent's household income. Before conducting an initial split on the data into a training and testing set, we wanted to visualize the outcome variable to understand it's distribution and check for problems. 
+
+```{r income-distribution}
+# Distribution of income (graph)
+local_arts_data %>%
+  ggplot(aes(x = income)) +
+  geom_bar() +
+  coord_flip() +
+  labs(
+    title = "Distribution of Respondent's Household Income"
+  ) +
+  theme_minimal()
+
+# Table of the levels of income
+local_arts_data %>% 
+  count(income)
+```
+
+As the graph and table above show, there is a significant amount of missingness in the outcome variable, with a total of 915 missing values. Most of this missingness is because participants didn't know their household income or because the respondent refused to answer the question, with some `NA` values being truly missing responses. For the rest of the data, the income categories with the highest counts are `$50,000 to $74,999`, `$30,000 to $39,999`, and `$20,000 to $29,999`. Categories with the lowest counts are `$75,000 to $99,000` and `$100,000 or more`. Before splitting the data into a training and test set, it would make sense to get rid of the rows that contain missing values, since it would not make sense (nor would it be possible) to predict missing values. The code for that is below.
+
+```{r filter-out-na-income}
+# Only keep observations with values for income
+local_arts_data <- local_arts_data %>% 
+  filter(!is.na(income))
+```
+
+## Splitting
+
+We decided to initially split the data into 70% training, and 30% testing. The imbalance between the various classes of `income` shown above prove that it would be important to stratify our initial split (and later our cross-validation) by `income`. Below is the code for splitting the data.
+
+```{r split-data}
+# Conduct Initial Split
+local_arts_split <- initial_split(data = local_arts_data, prop = 0.7, strata = income)
+
+# Collect Training Data
+local_arts_train <- training(local_arts_split)
+
+# Collect Testing Data
+local_arts_test <- testing(local_arts_split)
 ```
