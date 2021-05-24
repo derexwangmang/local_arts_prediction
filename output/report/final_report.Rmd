@@ -113,7 +113,7 @@ local_arts_data <- local_arts_data %>%
   filter(!is.na(income))
 ```
 
-## Splitting
+## Splitting and Cross Validation
 
 We decided to initially split the data into 70% training, and 30% testing. The imbalance between the various classes of `income` shown above prove that it would be important to stratify our initial split (and later our cross-validation) by `income`. Below is the code for splitting the data.
 
@@ -127,3 +127,15 @@ local_arts_train <- training(local_arts_split)
 # Collect Testing Data
 local_arts_test <- testing(local_arts_split)
 ```
+
+After conducting an initial split, the training data was also folded using 5-fold cross-validation with 3 repeats. These folds were used later during the tuning process to collect reliable information on model performance and avoid overfitting. The code used to create the folds is below. 
+
+```{r cross-validation}
+local_arts_fold <- vfold_cv(data = local_arts_train, v = 5, repeats = 3, strata = income)
+```
+
+## Exploratory Data Analysis
+
+Exploratory data analysis is a vital step in the modeling process. This is where relationships between the outcome and predictor variables are analyzed, and variables are examined for any problematic qualities that will need to be addressed in a model recipe. 
+
+After removing variables with a significant amount of missingness, there are 74 variables remaining, 73 of which may serve as predictor variables. To begin our exploratory data analysis, we thought it would make sense to explore the relationship between `income` and the various variables that deal with attendence at/engagement with the arts. There are two sets of variables indicating participation in the arts. One set is categorical, indicating whether or not the participant has gone to the indicated arts event in the last 12 months. The other set is numeric, indicating how many *times* the participant has gone to the indicated arts event in the last 12 months. First, let's look at how income is related to the *categorical* arts variables, ie whether or not a person has attended an arts event in the last 12 months. 

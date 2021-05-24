@@ -19,7 +19,7 @@ mars_recipe <-
   # set outcome variable (income) and predictors (all other variables)
   recipe(income ~ ., data = local_arts_train) %>% 
   # impute missing data
-  step_impute_bag(all_predictors()) %>%
+  step_impute_knn(all_predictors()) %>%
   # Yeo-Johnson transform numeric variables to deal with skewness
   step_YeoJohnson(all_numeric()) %>%
   # create an other category for infrequently occuring levels
