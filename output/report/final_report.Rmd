@@ -22,6 +22,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 library(tidyverse)
 library(tidymodels)
 library(naniar)
+library(skimr)
 ```
 
 ## Introduction
@@ -141,12 +142,16 @@ local_arts_fold <- vfold_cv(data = local_arts_train, v = 5, repeats = 3, strata 
 
 Exploratory data analysis is a vital step in the modeling process. This is where relationships between the outcome and predictor variables are analyzed, and variables are examined for any problematic qualities that will need to be addressed in a model recipe. 
 
-After removing variables with a significant amount of missingness, there are 74 variables remaining, 73 of which may serve as predictor variables. To begin our exploratory data analysis, we thought it would make sense to explore the relationship between `income` and the various variables that deal with attendence at/engagement with the arts. There are two sets of variables indicating participation in the arts. One set is categorical, indicating whether or not the participant has gone to the indicated arts event in the last 12 months. The other set is numeric, indicating how many *times* the participant has gone to the indicated arts event in the last 12 months. First, let's look at how income is related to some of the *categorical* arts variables, ie whether or not a person has attended the specified arts event in the last 12 months. 
+After removing variables with a significant amount of missingness, there are 74 variables remaining, 73 of which may serve as predictor variables. 
+
+### Frequency of Arts Attendence Predictor Variables 
+
+To begin our exploratory data analysis, we thought it would make sense to explore the relationship between `income` and the various variables that deal with attendence at/engagement with the arts. There are two sets of variables indicating participation in the arts. One set is categorical, indicating whether or not the participant has gone to the indicated arts event in the last 12 months. The other set is numeric, indicating how many *times* the participant has gone to the indicated arts event in the last 12 months. First, let's look at how income is related to some of the *categorical* arts variables, ie whether or not a person has attended the specified arts event in the last 12 months. 
 
 ```{r arts-attendence-1}
 # combined graph of categorical arts participation variables
 local_arts_train %>% 
-  select(income, jazz, classic, opera, musical, play, ballet, museum, fair) %>%
+  select(income, jazz, classic, opera, musical, play, ballet, museum, fair, odance) %>%
   pivot_longer(-income, names_to = "var", values_to = "value") %>%
   ggplot(aes(x = income, fill = value)) +
   geom_bar(position = "fill") +
@@ -154,13 +159,144 @@ local_arts_train %>%
   facet_wrap(~ var) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45),
-        legend.justification = c(1, 0),
-        legend.position = c(0.99, -.1)) +
+        legend.position = "top") +
+  guides(fill = guide_legend(title.position = "top")) +
   labs(
-    title = "Attendance at Arts Activities by Income",
-    fill = "Have you attended\n(*) in the last\n12 months?",
-    x = "prop"
+    fill = "Have you attended (*) in the last 12 months?",
+    y = "Proportion of Participants",
+    x  = "Income"
   )
 ```
 
+The faceted graph above shows that for most arts activities, the number of people who attend them increases as income bracket increases. This pattern is particularly defined for attendance at museums and musicals. Only around 30% of those with incomes under 10,000 dollars attended museums within the year, while around 70% of those with incomes of 100,000 dollars or more attended museums within the year. Only about 15% of people with incomes under 10,000 dollars attended musicals within the year, while around 50% of those incomes of 100,000 dollars or more attended museums within the year. This pattern makes sense, given that arts events cost money (and sometimes quite a bit) to attend. Thus, those people with more financial ability and time are more likely to attend arts events. 
 
+Another categorical arts participation variable that we thought would be important to look at in relation to `income` was whether or not a person visited the movies in the past twelve months.
+
+```{r cinema}
+local_arts_data %>% 
+  ggplot(aes(income, fill = cinema)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  theme_minimal() +
+  labs(title = "Going to the movies by income",
+       fill = "Have you gone to movie theater\nto see a movie\nin last 12 months?",
+       y = "prop")
+```
+
+The graph pretty clearly shows that people with higher incomes went to see a movie in the theaters more frequently in the last twelve months than people with lower incomes. `cinema` thus proves to be another important predictor variable to include along with the other categorical predictor variables related to arts participation shown above.
+
+Next, let's look at income in relation to the variables that indicate the number of *times* people attended the same arts events within the year. 
+
+```{r arts-attendence-2, warning = F}
+# combined graph of numeric arts participation variables
+local_arts_train %>%
+  select(income, starts_with("n")) %>%
+  filter(!is.na(income)) %>%
+  select(., 1:10) %>%
+  pivot_longer(-income, names_to = "var", values_to = "value") %>%
+  ggplot(aes(x = value, y = income)) +
+  geom_boxplot() +
+  facet_wrap(~ var) +
+  theme_minimal() +
+  coord_cartesian(xlim = c(0, 10)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Frequency of Attendance at Arts Activities by Income",
+    x = "number of times attending"
+  )
+```
+
+Its much harder to see a pattern with the numeric arts variables because there are so many people who did not attend the six above types of arts events at all within the year. However, there are a few variables in which a pattern with `income` is more clear. Again, there seems to a strong relationship between a person's household income and the number of times they attended museums within the year, with those with a higher income attending museums more frequently. It also seems like people in the top few income brackets attended jazz and classical concerts, as well as musicals and plays, more frequently than those with less money.  
+
+Below is another graph of `income` in relation to more variables indicating the number of times the respondent participated in a specific activity in the last 12 months. `nbooks` refers to the number of books the respondent read; `npark` refers to the number of times the respondent visited a history park/monument; `ntvart` refers to the number of times the respondent watched a visual arts program on TV/VCR; `ntvclass` refers to the number of times the respondent watched a classical music program on TV/VCR; `ntvdance` refers to the number of times a respondent watched a dance program on TV; `ntvjazz` refers to the number of times a respondent watched a jazz program on TV; `ntvmus` refers to the number of times a respondent watched a musical on TV; `ntvopera` refers to the number of times a respondent watched opera on TV, and `ntvplay` refers to the number of times a respondent watched a play on TV.
+
+```{r arts-attendence-3, warning = F}
+# combined graph of numeric arts participation variables 2
+local_arts_train %>%
+  select(income, starts_with("n")) %>%
+  filter(!is.na(income)) %>%
+  select(., 1, 11:19) %>%
+  gather(-income, key = "var", value = "value") %>%
+  ggplot(aes(x = value, y = income)) +
+  geom_boxplot() +
+  facet_wrap(~ var) +
+  theme_minimal() +
+  coord_cartesian(xlim = c(0, 20)) +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Frequency of Engaging in/Watching Arts Activities by Income",
+    x = "number of times engaging"
+  )
+```
+
+Again, for most of these arts activities, there doesn't seem to be a noticeable pattern between the number of times the participant engaged with that activity and their household income. `nbooks`, however, is a exception. It's very clear that participants with higher household incomes read more books within the year. There also seems to be a slight relationship between `npark` and `income`, with people with higher yearly incomes attending parks more frequently that those with lower yearly incomes. 
+
+It would also make sense to look at the distributions of these numeric variables related to attendance at, and engagement with, arts activities. Analyzing the distribution of numeric variables in one's data-set is important in the pre-modeling EDA process. This is because many models are very sensitive to skewness, and thus skewness in numeric data must be identified and dealt with before the data can be fed to the models. Below, we selected just these numeric arts variables, and conducted a skim with charts. 
+
+```{r skim-numeric-arts-variables}
+local_arts_train %>% 
+  select(starts_with("n")) %>% 
+  skim()
+```
+
+Every variable is very clearly quite right skewed. This is because each variable has the bulk of it's data around zero, a mean between zero and 15, and then data trailing off to some very high outliers. Furthermore, the small histograms shown in the skim display an asymmetric distribution for each of the selected variables. This skewness, as mentioned above, will need to be addressed in the modeling recipes.  
+
+### Demographic Predictor Variables 
+
+Another set of variables we thought would be important to explore in this data analysis are those variables relating to the demographics of the respondent, such as age, gender, race, education level and marital status. Each of these demographic variables seem as if they could provide valuable insight into the income of the participant. For example, income generally increases with education and age, while a larger household size generally indicates more financial stability and the ability to care for more family members. There is also usually a correlation between race and income, with white households having higher household incomes than households of color. 
+
+We began by looking at the relationship between income and the education level of the participant. 
+```{r relationship-educ-income}
+local_arts_train %>%
+  select(income, educ, race, gender, age, hhsize) %>%
+  filter(!is.na(income)) %>%
+  ggplot(aes(income, fill = educ)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Education Levels across Income Brackets",
+    fill = "Highest Education Level",
+    y = "prop"
+  )
+```
+
+As hypothesized, there appears to be a correlation between education level and income. The proportion of people with bachelor's degrees and with grad degrees increases as income increases.
+
+Since there are multiple levels of `educ`, it would make sense to visualize the distribution of this predictor.
+
+```{r dist-educ}
+# distributin of educ
+local_arts_train %>% 
+  mutate(
+    educ = educ %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(educ)) +
+  geom_bar() +
+  coord_flip() +
+  labs(
+    x = "Highest Education Level"
+  ) +
+  theme_minimal()
+```
+
+The levels with the highest counts are `Some college`, `High school`, and `Bachelors degree`. There are a few levels, `Some grad. school`, `Vocational school`, `Grades k-8`, `No school`, and `Other`, that have very few values. It might make sense to combine these into a single other level using `step_other` in our recipe, or employing the `step_nzv` or `step_zv` functions to deal with zero-variance predictors.
+
+The next demographic factor we explored in relation to income is gender.
+
+```{r relationship-income-gender}
+local_arts_train %>%
+  select(income, educ, gender, age, hhsize) %>%
+  filter(!is.na(income)) %>%
+  ggplot(aes(income, fill = gender)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Gender across Income Brackets",
+    fill = "Gender",
+    y = "prop"
+  )
+```
+
+As the income bracket increases, the proportion of women decrease, and the proportion of men increase. This is unsurprising, given the persistence of sexism in the workforce, particularly the gender pay gap and the glass ceiling in many top-tier, high-paying jobs. 
