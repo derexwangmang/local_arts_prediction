@@ -118,6 +118,9 @@ local_arts_data <- local_arts_data %>%
 We decided to initially split the data into 70% training, and 30% testing. The imbalance between the various classes of `income` shown above prove that it would be important to stratify our initial split (and later our cross-validation) by `income`. Below is the code for splitting the data.
 
 ```{r split-data}
+# Set Seed
+set.seed(3206)
+
 # Conduct Initial Split
 local_arts_split <- initial_split(data = local_arts_data, prop = 0.7, strata = income)
 
@@ -138,4 +141,26 @@ local_arts_fold <- vfold_cv(data = local_arts_train, v = 5, repeats = 3, strata 
 
 Exploratory data analysis is a vital step in the modeling process. This is where relationships between the outcome and predictor variables are analyzed, and variables are examined for any problematic qualities that will need to be addressed in a model recipe. 
 
-After removing variables with a significant amount of missingness, there are 74 variables remaining, 73 of which may serve as predictor variables. To begin our exploratory data analysis, we thought it would make sense to explore the relationship between `income` and the various variables that deal with attendence at/engagement with the arts. There are two sets of variables indicating participation in the arts. One set is categorical, indicating whether or not the participant has gone to the indicated arts event in the last 12 months. The other set is numeric, indicating how many *times* the participant has gone to the indicated arts event in the last 12 months. First, let's look at how income is related to the *categorical* arts variables, ie whether or not a person has attended an arts event in the last 12 months. 
+After removing variables with a significant amount of missingness, there are 74 variables remaining, 73 of which may serve as predictor variables. To begin our exploratory data analysis, we thought it would make sense to explore the relationship between `income` and the various variables that deal with attendence at/engagement with the arts. There are two sets of variables indicating participation in the arts. One set is categorical, indicating whether or not the participant has gone to the indicated arts event in the last 12 months. The other set is numeric, indicating how many *times* the participant has gone to the indicated arts event in the last 12 months. First, let's look at how income is related to some of the *categorical* arts variables, ie whether or not a person has attended the specified arts event in the last 12 months. 
+
+```{r arts-attendence-1}
+# combined graph of categorical arts participation variables
+local_arts_train %>% 
+  select(income, jazz, classic, opera, musical, play, ballet, museum, fair) %>%
+  pivot_longer(-income, names_to = "var", values_to = "value") %>%
+  ggplot(aes(x = income, fill = value)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  facet_wrap(~ var) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45),
+        legend.justification = c(1, 0),
+        legend.position = c(0.99, -.1)) +
+  labs(
+    title = "Attendance at Arts Activities by Income",
+    fill = "Have you attended\n(*) in the last\n12 months?",
+    x = "prop"
+  )
+```
+
+
