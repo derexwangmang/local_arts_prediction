@@ -116,26 +116,21 @@ local_arts_data <- local_arts_data %>%
 
 ## Splitting and Cross Validation
 
-We decided to initially split the data into 70% training, and 30% testing. The imbalance between the various classes of `income` shown above prove that it would be important to stratify our initial split (and later our cross-validation) by `income`. Below is the code for splitting the data.
+We decided to initially split the data into 70% training, and 30% testing. The imbalance between the various classes of `income` shown above prove that it would be important to stratify our initial split (and later our cross-validation) by `income`. The training and testing sets are read in below
 
 ```{r split-data}
-# Set Seed
-set.seed(3206)
+# load training data
+load(file = "data/processed/local_arts_train.rda")
 
-# Conduct Initial Split
-local_arts_split <- initial_split(data = local_arts_data, prop = 0.7, strata = income)
-
-# Collect Training Data
-local_arts_train <- training(local_arts_split)
-
-# Collect Testing Data
-local_arts_test <- testing(local_arts_split)
+# load testing data
+load(file = "data/processed/local_arts_test.rda")
 ```
 
-After conducting an initial split, the training data was also folded using 5-fold cross-validation with 3 repeats. These folds were used later during the tuning process to collect reliable information on model performance and avoid overfitting. The code used to create the folds is below. 
+After conducting an initial split, the training data was also folded using 5-fold cross-validation with 3 repeats. These folds were used later during the tuning process to collect reliable information on model performance and avoid overfitting.
 
 ```{r cross-validation}
-local_arts_fold <- vfold_cv(data = local_arts_train, v = 5, repeats = 3, strata = income)
+# load folded object
+load(file = "data/processed/local_arts_fold.rda")
 ```
 
 ## Exploratory Data Analysis
@@ -191,7 +186,6 @@ Next, let's look at income in relation to the variables that indicate the number
 # combined graph of numeric arts participation variables
 local_arts_train %>%
   select(income, starts_with("n")) %>%
-  filter(!is.na(income)) %>%
   select(., 1:10) %>%
   pivot_longer(-income, names_to = "var", values_to = "value") %>%
   ggplot(aes(x = value, y = income)) +
@@ -214,7 +208,6 @@ Below is another graph of `income` in relation to more variables indicating the 
 # combined graph of numeric arts participation variables 2
 local_arts_train %>%
   select(income, starts_with("n")) %>%
-  filter(!is.na(income)) %>%
   select(., 1, 11:19) %>%
   gather(-income, key = "var", value = "value") %>%
   ggplot(aes(x = value, y = income)) +
@@ -243,13 +236,12 @@ Every variable is very clearly quite right skewed. This is because each variable
 
 ### Demographic Predictor Variables 
 
-Another set of variables we thought would be important to explore in this data analysis are those variables relating to the demographics of the respondent, such as age, gender, race, education level and marital status. Each of these demographic variables seem as if they could provide valuable insight into the income of the participant. For example, income generally increases with education and age, while a larger household size generally indicates more financial stability and the ability to care for more family members. There is also usually a correlation between race and income, with white households having higher household incomes than households of color. 
+Another set of variables we thought would be important to explore in this data analysis are those variables relating to the demographics of the respondent, such as age, gender, race, education level and marital status. Each of these demographic variables seem as if they could provide valuable insight into the income of the participant. For example, income generally increases when a person has more education education. There is also usually a correlation between race and income, with white households having higher household incomes than households of color. 
 
 We began by looking at the relationship between income and the education level of the participant. 
 ```{r relationship-educ-income}
 local_arts_train %>%
   select(income, educ, race, gender, age, hhsize) %>%
-  filter(!is.na(income)) %>%
   ggplot(aes(income, fill = educ)) +
   geom_bar(position = "fill") +
   coord_flip() +
@@ -280,14 +272,13 @@ local_arts_train %>%
   theme_minimal()
 ```
 
-The levels with the highest counts are `Some college`, `High school`, and `Bachelors degree`. There are a few levels, `Some grad. school`, `Vocational school`, `Grades k-8`, `No school`, and `Other`, that have very few values. It might make sense to combine these into a single other level using `step_other` in our recipe, or employing the `step_nzv` or `step_zv` functions to deal with zero-variance predictors.
+The levels with the highest counts are `Some college`, `High school`, and `Bachelors degree`. There are a few levels, `Some grad. school`, `Vocational school`, `Grades k-8`, `No school`, and `Other`, that have very few values and could pose a problem for modeling due to dummy coding. This will be addressed in our recipe by the addition of a `step_other` step in our recipe that combines infrequently occurring levels into a single other level.
 
 The next demographic factor we explored in relation to income is gender.
 
 ```{r relationship-income-gender}
 local_arts_train %>%
   select(income, educ, gender, age, hhsize) %>%
-  filter(!is.na(income)) %>%
   ggplot(aes(income, fill = gender)) +
   geom_bar(position = "fill") +
   coord_flip() +
@@ -299,4 +290,109 @@ local_arts_train %>%
   )
 ```
 
-As the income bracket increases, the proportion of women decrease, and the proportion of men increase. This is unsurprising, given the persistence of sexism in the workforce, particularly the gender pay gap and the glass ceiling in many top-tier, high-paying jobs. 
+As the income bracket increases, the proportion of women with that income decreases, and the proportion of men with that income increasse. This is unsurprising, given the persistence of sexism in the workforce, particularly the gender pay gap and the glass ceiling in many top-tier, high-paying jobs. 
+
+Next, we explored the relationship between household income and age.
+
+```{r relationship-age-income}
+ggplot(local_arts_train, aes(age)) +
+  geom_histogram(binwidth = 5) +
+  theme_minimal() +
+  facet_wrap(~ income) +
+  labs(
+    title = "Distribution of Age across Income Brackets",
+    x = "Age",
+    y = "Count"
+  )
+```
+
+As the income bracket increases, it seems like the distribution of ages shifts slightly upwards. Meaning as income bracket increases, so does the average age of participants. This would make sense: younger adults tend to have less money due to their lack of experience. Older adults have more experience in the workforce and may be more financially responsible, leading to a higher incomes.
+
+We also explored the relationship between a respondent's marital status and their income. 
+
+```{r relationship-income-marital-status}
+local_arts_train %>%
+  ggplot(aes(income, fill = marital)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Marital Status across Income Brackets",
+    y = "prop",
+    fill = "Marital Status"
+  )
+```
+
+The graph shows that there is very clearly a relationship between a respondent's marital status and their incomme. There are a higher proportion of married people with higher incomes, and a higher proportion of single people with lower incomes.
+
+Finally, the last demographic variable we explored was `race`. First, we looked at the relationship between a participant's race and their income.
+
+```{r relationship-income-race}
+local_arts_train %>%
+  ggplot(aes(income, fill = race)) +
+  geom_bar(position = "fill") +
+  coord_flip() +
+  theme_minimal() +
+  labs(
+    title = "Race by Income",
+    fill = "Count",
+    y = "prop"
+  )
+```
+
+The graph very clearly shows that as the income bracket increases, so do the number of white people with that as their household income. There is a larger proportion of people of color represented in the lower income brackets than in the higher income brackets. 
+
+We also thought, since there are so many levels of the variable `race`, that it would make sense to look at the distribution of `race` itself.
+
+```{r distribution-of-race}
+local_arts_train %>% 
+  mutate(
+    race = race %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(race)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal()
+```
+
+White folks vastly outnumber folks of other races in this dataset. There is very little diversity in this variable, which will be a problem when dummy encoding. This will be addressed in our recipe by the addition of a `step_other` step in our recipe that combines infrequently occurring levels into a single other level.
+
+### Miscellaneous Findings
+
+There were a few final things that we explored in our data-set prior to modeling. Given how many people responded that they had not attended or participated in a given arts event within the past year, we thought it would be interesting to look at some of the reasons *why* this is the case. Below is the distribution of the variable `bar1`, which indicates respondent's first reason for not attending local arts events/not attending them more often.
+
+```{r dist-bar1}
+local_arts_train %>% 
+  mutate(
+    bar1 = bar1 %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(bar1)) +
+  geom_bar() +
+  coord_flip() +
+  labs(
+    x = "reason for not attending"
+  ) +
+  theme_minimal()
+```
+
+As you can see above, the most common reason for people not attending local arts events more frequently is that they don't have time, followed by the cost of tickets and lack of childcare. Note also that most of the levels of `bar1`, except for `(02) Don't have time`, have only very few values. This could be a problem when dummy encoding for modeling as it will create variables with little to no variance. Thus, this problem will be dealt with via the addition of a `step_zv` step in our recipes to get rid of zero variance variables. It could also be interesting to see how these reasons for not attending local arts events change (or remain the same) across levels of `income`. 
+
+```{r}
+# distribution of bar1 by income
+local_arts_train %>% 
+  mutate(
+    bar1 = bar1 %>% fct_infreq() %>% fct_rev()
+  ) %>% 
+  ggplot(aes(bar1)) +
+  geom_bar() +
+  facet_wrap(~ income) +
+  coord_flip() +
+  labs(
+    x = "reason for not attending"
+  ) +
+  theme_minimal()
+```
+
+It seems that across all income levels, lack of time is the primary reason for not attending local arts events more frequently.
+
+Finally, using the `caret` package, we used `nearZeroVar()` to identify which variables truly had little to no variance. Such values would fail to provide meaningful insight or significantly affect the model. These variables were `caseid`, `site`, `abtid`, and `exchange`, which were all meaningless administrative variables, as well as `source2`, `source3`, `source4`, `source5` which record the 2nd, 3rd, 4th, and 5th answers given by respondents as to their source of information about local arts events. All eight of these variables were removed from our initial data-set before splitting.
