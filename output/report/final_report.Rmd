@@ -23,6 +23,7 @@ library(tidyverse)
 library(tidymodels)
 library(naniar)
 library(skimr)
+library(kableExtra)
 ```
 
 ## Introduction
@@ -401,11 +402,9 @@ Finally, using the `caret` package, we used `nearZeroVar()` to identify which va
 
 Ultimately, after removing these last eight variables, we decided to utilize all of the 65 remaining variables in our data-set as predictors. Although we didn't explore every single variable in this data-set in our exploratory data analysis, from what we did explore there seems to be at least a mild relationship between most of the possible predictor variables and our outcome, `income`. The next step, then, after conducting an exploratory data analysis was to choose the types of models we wanted to tune, and then build pre-processing recipes in order to prepare our data for modeling.
 
-# Models
+## Recipes
 
-# Recipes
-
-We used the same exact recipe for four of our models: the k-nearest neighbors, neural net, elastic net, and support vector machine. This recipe contained an  initial step in which the recipe was established (using the `recipe` function). This step indicates `income` as our outcome, and all other variables as predictors. Next, the recipe contains an imputation step for missingness using bagged-tree models via `step_bag_impute`. Then we added `step_YeoJohnson` for all numeric variables. This transformation will help deal with the skewness found in our exploratory data analysis by making numeric predictors symmetrical. Next, we added two `step_other` steps, one for `educ` and one for `race`, which both had levels with very few values in them. These two steps indicate that, for both `educ` and `race`, the bottom 1% of levels should be combined into a single `other` level. Then, we added `step_dummy` to dummy-code all categorical variables. Dummy coding means that every categorical variable with n levels becomes n - 1 numerically encoded variables with values of 0 (if the observation does not take that level) or 1 (if the observation *does* take that level). We made sure to indicate that our outcome variable was **not** included in this dummy coding step even though it too is a categorical variable. Models will not run if the outcome variable is dummy coded. It needs to remain as it is. Next, we added `step_normalize` to center and scale all predictors. Centering the data places the mean at zero, and scaling standardizes the units of the data so that all variables have a standard deviation of 1. Scaling in particular is beneficial for nearest neighbors models, because they use distance metrics to calculate the k-nearest points to the new observation, and thus benefit from all variables being in the same unit. Similarly, elastic net models benefit from all variables being in the same unit to ensure the penalty used by the model effects all the variables in the same way. Finally, `step_zv` was included to remove any zero variance predictors after dummy coding. Zero-variance predictors result from levels of a categorical variable that occur so infrequently that they simply aren't present in some re-samples. Thus, the dummy-encoded variables representing those levels in that re-sample contain only zeros. These variables hold no predictive information, and thus can cause problems for our model, which is why it is important to remove them. The code for this recipe is printed below. 
+After exploring the data, an important next step in the modeling process is preparing the data to be fed to the models. No model can perform particularly well if the data is left in its raw condition, and thus feature engineering is used to perform various transformations on the data to make it as amenable to the models as possible. This can be done with a recipe using the `recipes` package from `tidymodels`. We used the same exact recipe for four of our models: the k-nearest neighbors, neural net, elastic net, and support vector machine. This recipe contained an  initial step in which the recipe was established (using the `recipe` function). This step indicates `income` as our outcome, and all other variables as predictors. Next, the recipe contains an imputation step for missingness using bagged-tree models via `step_bag_impute`. Then we added `step_YeoJohnson` for all numeric variables. This transformation will help deal with the skewness found in our exploratory data analysis by making numeric predictors symmetrical. Next, we added two `step_other` steps, one for `educ` and one for `race`, which both had levels with very few values in them. These two steps indicate that, for both `educ` and `race`, the bottom 1% of levels should be combined into a single `other` level. Then, we added `step_dummy` to dummy-code all categorical variables. Dummy coding means that every categorical variable with n levels becomes n - 1 numerically encoded variables with values of 0 (if the observation does not take that level) or 1 (if the observation *does* take that level). We made sure to indicate that our outcome variable was **not** included in this dummy coding step even though it too is a categorical variable. Models will not run if the outcome variable is dummy coded. It needs to remain as it is. Next, we added `step_normalize` to center and scale all predictors. Centering the data places the mean at zero, and scaling standardizes the units of the data so that all variables have a standard deviation of 1. Scaling in particular is beneficial for nearest neighbors models, because they use distance metrics to calculate the k-nearest points to the new observation, and thus benefit from all variables being in the same unit. Similarly, elastic net models benefit from all variables being in the same unit to ensure the penalty used by the model effects all the variables in the same way. Finally, `step_zv` was included to remove any zero variance predictors after dummy coding. Zero-variance predictors result from levels of a categorical variable that occur so infrequently that they simply aren't present in some re-samples. Thus, the dummy-encoded variables representing those levels in that re-sample contain only zeros. These variables hold no predictive information, and thus can cause problems for our model, which is why it is important to remove them. The code for this recipe is printed below. 
 
 ```{r recipe-1}
 # recipe used for knn, neural net, elastic net and support vector machine
@@ -471,3 +470,53 @@ rf_recipe <-
   # remove zero-variance predictors
   step_zv(all_predictors())
 ```
+
+## Models
+
+## Evaluating Model Performance
+
+After tuning our six different models, we evaluated how each model performed across the folds. To evaluate performance, the metric we decided to use was the area under the receiver operating curve, or roc-auc. Roc-auc gives us a measure of how well our model can differentiate between the different classes of our outcome variable. An roc-auc value closer to one means the model performs better. An roc-auc value of 0.5 would mean that the model performs no better than if we had simply predicted the outcome values at random. 
+
+Below is a table showing the roc-auc value, and standard error, of the best performing model of each model type across the folds, arranged in descending order by roc-auc.
+
+```{r model_performance_folds}
+# create tibble
+best_models <- tribble(
+  ~`Model Type`, ~`Roc-auc`, ~`Standard error`,
+  #----------|---------|----------------|
+  "Random Forest", 0.712, 0.00441,
+  "Elastic Net", 0.684, 0.00264,
+  "Boosted Tree", 0.688, 0.00265,
+  "Support Vector Machine", 0.687, 0.00306,
+  "Neural Network", 0.591, 0.0128,
+  "K-Nearest Neighbors", 0.596, 0.00385
+)
+
+# present the table
+best_models %>% 
+  # arrange in descending order of roc-auc
+  arrange(desc(`Roc-auc`)) %>% 
+  # apply table styling functions from kable package
+  kbl() %>%
+  kable_styling()
+```
+
+As you can see, the random forest model performs the best out of all the model types, producing an roc-auc value of 0.712. Furthermore, there is no overlap between standard error of the best random forest and the standard error of the best boosted tree, the second highest performing model, do not overlap. This gives us conclusive evidence that the random forest model is our best performing model, and thus the model that we will use to predict the outcome values on our test data. Before we move on, however, to finalizing our best random forest model workflow and applying it to the test data, let's get a sense of what the parameter values are that created the best random forest model. Below, I read in the tuned object of the random forest model from it's `.rds` file, and then using the `autoplot()` function produced a graphical representation of the performance of the random forest model across different possible parameter values.
+
+```{r rf_parameters}
+# read in rf_tuned_final
+load(file = "output/models/rf_tuned.rda")
+
+# autoplot
+# specify roc_auc as my performance measure
+autoplot(rf_tuned, metric = "roc_auc")
+```
+
+The auto-plot shows that the random forest model consistently produced the best roc-auc value with a minimal node size (`min_n`) of 40, except for a small overlap with a `min_n` value of 30 at an `mtry` value of 21. The autoplot also shows that roc-auc increased as the number of randomly selected predictors in a tree, `mtry` increased from 10 to 30, and then dropped off again between 30 and 56. Thus, the combination of parameters that produced the best random forest model was a `min_n` of 40 and an `mtry` value of 33, as you can see in the table below. (Note: it appears as though all five models performed the same because their roc-auc values were rounded to the thousandth decimal. But the model with an `mtry` of 33 and a `min_n` of 40 is at the top).
+
+```{r best-rf-models}
+# show best performing random forest models
+rf_tuned %>% 
+  show_best(metric = "roc_auc")
+```
+
