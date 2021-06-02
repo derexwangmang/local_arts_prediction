@@ -474,6 +474,27 @@ rf_recipe <-
 
 ## Models
 
+We created six models. For each model, we tuned its parameters to identify the parameters that would lead to the best performance. These models and the parameters tuned are below.
+
+* **Boosted Tree**: The boosted tree is an ensemble model that combines subsets of weaker trees. It builds regression trees iteratively; that is, each tree builds on the tree that came before it and minimizes the errors.
+  * mtry: indicates the number of predictors randomly sampled at each split
+  * min_n: the number of data points required for node to be split further
+  * learn_rate: rate at which algorithm adapts from iteration-to-iteration
+* **Elastic Net**: This model focuses on adding regularization to the ordinary least squares model, preferring some bias over high variance. To do this, it adds bias towards some terms. In Ridge and Lasso regression, the penalty is set whereas in the generalized elastic net, the Ridge and Lasso is combined.
+  * penalty: represents the amount of regularization
+  * mixture: proportion of L1 (Lasso) regularization
+* **K-Nearest Neighbors**: The nearest neighbor model averages values of the nearest observations, with similar observations being closer in distance than different observations.
+  * neighbors: the number of neighbors taken into account
+* **Neural Network**: Also known as multilayer perceptrons, this model starts out with a set of weights that are adjusted based on a correct or incorrect classification.
+  * hidden_units: number of units in hidden model
+  * penalty: amount of weight decay
+* **Random Forest**: The random forest is an ensemble model that combines a set of decision trees. For each decision tree, a random set of input variables are included. Then for the test data, the random forest considers the "vote" from each tree, with the class receiving the highest "vote" serving as the classification.
+  * mtry: indicates the number of predictors randomly sampled at each split
+  * min_n: the number of data points required for node to be split further
+* **Support Vector Machine**: This model identifies a hyperplane that maximizes the margin, the distance between it and the nearest data point.
+  * cost: cost of predicting a sample within/on wrong side of margin
+  * rbf_sigma: precision parameter for radial basis function
+
 ## Evaluating Model Performance
 
 After tuning our six different models, we evaluated how each model performed across the folds. To evaluate performance, the metric we decided to use was the area under the receiver operating curve, or roc-auc. Roc-auc gives us a measure of how well our model can differentiate between the different classes of our outcome variable. An roc-auc value closer to one means the model performs better. An roc-auc value of 0.5 would mean that the model performs no better than if we had simply predicted the outcome values at random. 
