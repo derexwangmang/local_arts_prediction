@@ -572,4 +572,52 @@ rf_final_results %>%
   vip()
 ```
 
-Interestingly `weight`, which is a variable that gives the weighting factor used for each respondent, ended up being the most important variable used to predict `income`. After that, `age`, `educ`, and `marital` were the second, third, and fourth most predictive variables. This is rather unsurprising, given the correlation we saw between these demographic variables and `income` in our exploratory data analysis. It's also worth noticing that none of the categorical arts participation variables made it into the top 10 most important predictive variables, only two numeric arts participation variables—-`nbooks` and `nfair`. Out of all the numeric arts participation variables, it makes sense that `nbooks` in particular made it into th etop 10 most important predictive variables, given is distinct relationship with `income`.
+Interestingly `weight`, which is a variable that gives the weighting factor used for each respondent, ended up being the most important variable used to predict `income`. After that, `age`, `educ`, and `marital` were the second, third, and fourth most predictive variables. This is rather unsurprising, given the correlation we saw between these demographic variables and `income` in our exploratory data analysis. It's also worth noticing that none of the categorical arts participation variables made it into the top 10 most important predictive variables, only two numeric arts participation variables—-`nbooks` and `nfair`. Out of all the numeric arts participation variables, it makes sense that `nbooks` in particular made it into the top 10 most important predictive variables, given its distinct relationship with `income`.
+
+## Performance on Test Data
+
+After fitting the model to the entire training dataset with tuned parameters, we reviewed its performance on the testing dataset.
+
+```{r roc-auc-val}
+load("output/models/random_forest_predictions.rda")
+rf_final_pred %>%
+  roc_auc(truth = income, `.pred_Under $10,000`, `.pred_$10,000 to $14,999`, `.pred_$15,000 to $19,999`,
+                     `.pred_$20,000 to $29,999`, `.pred_$30,000 to $39,999`, `.pred_$40,000 to $49,999`,
+                     `.pred_$50,000 to $74,999`, `.pred_$75,000 to $99,999`, `.pred_$100,000 or more`)
+```
+
+The overall roc-auc value is 0.715, which is similar to the random forest's performance in the cross-validated folds. While informative, this roc-auc value is an average across all classes. How did its performance change across classes?
+
+```{r roc-auc-plot}
+rf_final_pred %>%
+  roc_curve(truth = income, `.pred_Under $10,000`, `.pred_$10,000 to $14,999`, `.pred_$15,000 to $19,999`,
+                     `.pred_$20,000 to $29,999`, `.pred_$30,000 to $39,999`, `.pred_$40,000 to $49,999`,
+                     `.pred_$50,000 to $74,999`, `.pred_$75,000 to $99,999`, `.pred_$100,000 or more`) %>%
+  autoplot()
+```
+
+The roc-auc plots indicate that the random forest predicts the `Under $10,000` and `$50,000 to $74,999` income bracket well. For the rest of the income levels however, performance is significantly worse. For the income brackets starting with `$20,000`, `$30,000`, and `$40,000`, the curve closely hugs the `y = x` line indicating that the model is not accurately distinguishing between the correct class and a different class.
+
+We can more closely examine its performance by reviewing a confusion matrix.
+
+```{r confusion-matrix}
+conf_mat(rf_final_pred, truth = income, estimate = .pred_class) %>%
+  autoplot(type = "heatmap")
+```
+
+The predicted classifications are on the y-axis while the true values are on the x-axis. The diagonal indicates where the two meet; in other words, the predicted value matches the true value.
+
+It seems that for truth class `Under $10,000`, the random forest predicts the class correctly or provides a faulty prediction of `$20,000 to $29,999` for the majority of the cases. In fact, the random forest classifies the majority of its input as `$20,000 to $29,999`, `30,000 to $39,999`, and `$50,000 to $74,999`. In the context of the data provided by the EDA, this makes sense: these classes make up the highest proportion in the dataset. Although we stratified by `income`, it may be that there were not many distinguishing variables in the data. That is, none of the variables may have been good predictors for the income level, causing the random forest to essentially default to the classes with the highest proportion.
+
+Our recipe only involved dummy-encoding income, not ensuring that it was ordinal (ordered) data. However, the confusion matrix demonstrates that the majority of the predicted values were only one or two to the left or right of the truth value. In other words, had the classes been ordered, the difference between the predicted and truth values would only be one or two classes.
+
+## Conclusion
+
+The random forest performed decently on the training and testing data. Given their empirical nature and affinity for high-dimensional data, this ensemble model performed the best of the six models we tested. We would be hesitant to endorse its use beyond this project, however, given that it can only provide accurate predictions for specific classes. Attendance of the arts is almost certainly *not* a great predictor of income regardless, given that participation tends to only be voluntary and self-selective, fluctuating with age, lifestyle, and responsibilities.
+
+## Next Steps
+
+To provide better predictions, it could be invaluable to re-examine the original training dataset, reviewing the dataset with greater domain knowledge to identify variables that we may have discarded that may actually be useful. Another way to improve performance would be to review the correlation plot and only include variables strongly correlated with the outcome variable. That way, inferential statistics could be applied to improve upon our predictive statistical analysis. Future questions to explore are included here:
+
+* How can the age of the participant be predicted by other variables within the dataset?
+* How is the presence of other household members affected by performance in the arts?
