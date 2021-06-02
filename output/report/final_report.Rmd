@@ -24,6 +24,7 @@ library(tidymodels)
 library(naniar)
 library(skimr)
 library(kableExtra)
+library(vip)
 ```
 
 ## Introduction
@@ -400,7 +401,7 @@ Finally, using the `caret` package, we used `nearZeroVar()` to identify which va
 
 -------------------------------------------------------------------
 
-Ultimately, after removing these last eight variables, we decided to utilize all of the 65 remaining variables in our data-set as predictors. Although we didn't explore every single variable in this data-set in our exploratory data analysis, from what we did explore there seems to be at least a mild relationship between most of the possible predictor variables and our outcome, `income`. The next step, then, after conducting an exploratory data analysis was to choose the types of models we wanted to tune, and then build pre-processing recipes in order to prepare our data for modeling.
+Ultimately, after removing these last eight variables, we decided to utilize all of the 65 remaining variables in our data-set as predictors. Although we didn't explore every single variable in this data-set in our exploratory data analysis, from what we did explore there seems to be at least a mild relationship between most of the possible predictor variables and our outcome, `income`. The next step, then, after conducting an exploratory data analysis was to build pre-processing recipes in order to prepare our data for modeling, and then choose the types of models we wanted to tune.
 
 ## Recipes
 
@@ -501,7 +502,7 @@ best_models %>%
   kable_styling()
 ```
 
-As you can see, the random forest model performs the best out of all the model types, producing an roc-auc value of 0.712. Furthermore, there is no overlap between standard error of the best random forest and the standard error of the best boosted tree, the second highest performing model, do not overlap. This gives us conclusive evidence that the random forest model is our best performing model, and thus the model that we will use to predict the outcome values on our test data. Before we move on, however, to finalizing our best random forest model workflow and applying it to the test data, let's get a sense of what the parameter values are that created the best random forest model. Below, I read in the tuned object of the random forest model from it's `.rds` file, and then using the `autoplot()` function produced a graphical representation of the performance of the random forest model across different possible parameter values.
+As you can see, the random forest model performs the best out of all the model types, producing an roc-auc value of 0.712. Furthermore, there is no overlap between standard error of the best random forest and the standard error of the best boosted tree, the second highest performing model, do not overlap. This gives us conclusive evidence that the random forest model is our best performing model, and thus the model that we will use to predict the outcome values on our test data. Before we move on, however, to finalizing our best random forest model workflow and applying it to the test data, let's get a sense of what the parameter values are that created the best random forest model. Below, I read in the tuned object of the random forest model from it's `.rds` file, and then using the `autoplot()` function to produce a graphical representation of the performance of the random forest model across different possible parameter values.
 
 ```{r rf_parameters}
 # read in rf_tuned_final
@@ -520,3 +521,29 @@ rf_tuned %>%
   show_best(metric = "roc_auc")
 ```
 
+## Finalizing Random Forest Workflow and Variable Importance Plot
+
+Now that we have chosen the random forest model, with a `min_n` of 40 and an `mtry` of 33, as our best model, it is time to finalize the random forest workflow with these parameters, and then fit the random forest model to the entire training data. This fitted model is what will be used to predict values of `income` using the testing data. The code used to do these two steps is printed below.
+
+```{r finalizing-and-fitting}
+# set seed
+set.seed(1234)
+
+# finalize workflow
+rf_final_workflow <- rf_workflow %>% 
+  finalize_workflow(select_best(rf_tuned, metric = "roc_auc"))
+
+# fit finalized workflow to all training data
+rf_final_results <- fit(rf_final_workflow, local_arts_train)
+```
+
+Before moving on to evaluate the predictive performance of our model on the testing data, we thought it would be beneficial to examine the variable importance plot from the random forest model. This plot is developed when tuning the model, and describes which variables were used most frequently by the model to predict `income`, ie which variables had the most predictive power.
+
+```{r vip}
+# create variable importance plot
+rf_final_results %>% 
+  pull_workflow_fit() %>% 
+  vip()
+```
+
+Interestingly `weight`, which is a variable that gives the weighting factor used for each respondent, ended up being the most important variable used to predict `income`. After that, `age`, `educ`, and `marital` were the second, third, and fourth most predictive variables. This is rather unsurprising, given the correlation we saw between these demographic variables and `income` in our exploratory data analysis. It's also worth noticing that none of the categorical arts participation variables made it into the top 10 most important predictive variables, only two numeric arts participation variables—-`nbooks` and `nfair`. Out of all the numeric arts participation variables, it makes sense that `nbooks` in particular made it into th etop 10 most important predictive variables, given is distinct relationship with `income`.
