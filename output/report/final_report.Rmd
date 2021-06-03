@@ -586,7 +586,7 @@ rf_final_pred %>%
                      `.pred_$50,000 to $74,999`, `.pred_$75,000 to $99,999`, `.pred_$100,000 or more`)
 ```
 
-The overall roc-auc value is 0.715, which is similar to the random forest's performance in the cross-validated folds. While informative, this roc-auc value is an average across all classes. How did its performance change across classes?
+The overall roc-auc value is 0.715, which is similar to the random forest's performance in the cross-validated folds. This consistency is a good sign, and signifies that our model didn't overfit to the training data. While informative, this roc-auc value is an average across all classes. How did the performance of our model change across classes? To investigate this question, we can plot ROC curves for each class of our outcome variable. An ROC curve graphs sensitivity (which is the number of true positives, ie correctly classified values of the event class, divided by true positives plus false negatives, ie all members of the event class) by one minus specificity (which is the true negatives, ie all observations correctly classified as not the event class, divided by the true negatives plus false positives, ie all members of the not event class) at different threshold values. A threshold is the decision point at which observations are categorized into a certain class based on the probabilities the model designates for that observation for each class. ROC curves represent better model performance if they are closer to a right angle. An ROC curve that is close t,o or exactly at, a straight, diagonal line indicates that the model performed no better at distinguishing between the different classes of the outcome than if it had done so by random chance alone. 
 
 ```{r roc-auc-plot}
 rf_final_pred %>%
@@ -596,20 +596,18 @@ rf_final_pred %>%
   autoplot()
 ```
 
-The roc-auc plots indicate that the random forest predicts the `Under $10,000` and `$50,000 to $74,999` income bracket well. For the rest of the income levels however, performance is significantly worse. For the income brackets starting with `$20,000`, `$30,000`, and `$40,000`, the curve closely hugs the `y = x` line indicating that the model is not accurately distinguishing between the correct class and a different class.
+The roc-auc plots indicate that the random forest predicts the `Under $10,000` and `$50,000 to $74,999` income bracket well. For the rest of the income levels however, performance is significantly worse. For the income brackets starting with `$20,000`, `$30,000`, and `$40,000`, the curve closely hugs the `y = x` line, indicating that the model is not accurately distinguishing between the correct class and a different, incorrect class.
 
-We can more closely examine its performance by reviewing a confusion matrix.
+We can more closely examine the performance of our random forest model by reviewing a confusion matrix.
 
 ```{r confusion-matrix}
 conf_mat(rf_final_pred, truth = income, estimate = .pred_class) %>%
   autoplot(type = "heatmap")
 ```
 
-The predicted classifications are on the y-axis while the true values are on the x-axis. The diagonal indicates where the two meet; in other words, the predicted value matches the true value.
+The predicted classifications are on the y-axis while the true values are on the x-axis. The x-axis starts at `Under $10,000` and goes to `$100,000  or more`. The diagonal indicates where the two meet; in other words, where the predicted value matches the true value.
 
-It seems that for truth class `Under $10,000`, the random forest predicts the class correctly or provides a faulty prediction of `$20,000 to $29,999` for the majority of the cases. In fact, the random forest classifies the majority of its input as `$20,000 to $29,999`, `30,000 to $39,999`, and `$50,000 to $74,999`. In the context of the data provided by the EDA, this makes sense: these classes make up the highest proportion in the dataset. Although we stratified by `income`, it may be that there were not many distinguishing variables in the data. That is, none of the variables may have been good predictors for the income level, causing the random forest to essentially default to the classes with the highest proportion.
-
-Our recipe only involved dummy-encoding income, not ensuring that it was ordinal (ordered) data. However, the confusion matrix demonstrates that the majority of the predicted values were only one or two to the left or right of the truth value. In other words, had the classes been ordered, the difference between the predicted and truth values would only be one or two classes.
+It seems that for truth class `Under $10,000`, the random forest model either correctly predicts the class, or provides a faulty prediction of `$20,000 to $29,999` for the majority of the cases. In fact, the random forest classifies the majority of its input as `$20,000 to $29,999`, `30,000 to $39,999`, and `$50,000 to $74,999`. For the other four classes of the outcome, `$10,000 too $14,99`, `$15,00 to $19,999`, `$40,000 to $49,999`, `$75,000 to $99,000` and `$100,000 or more`, the model predicts very few of the observations accurately. In the context of the data provided by the EDA, this makes sense: `$20,000 to $29,999`, `30,000 to $39,999`, and `$50,000 to $74,999` were the classes that had the highest proportion of observations in the dataset. Although we stratified both our initial split and our folds by `income`, it may be that there were not many distinguishing variables in the data. That is, none of the variables may have been good predictors for the income level, causing the random forest to essentially default to the classes with the highest proportion.
 
 ## Conclusion
 
@@ -620,4 +618,10 @@ The random forest performed decently on the training and testing data. Given the
 To provide better predictions, it could be invaluable to re-examine the original training dataset, reviewing the dataset with greater domain knowledge to identify variables that we may have discarded that may actually be useful. Another way to improve performance would be to review the correlation plot and only include variables strongly correlated with the outcome variable. That way, inferential statistics could be applied to improve upon our predictive statistical analysis. Future questions to explore are included here:
 
 * How can the age of the participant be predicted by other variables within the dataset?
-* How is the presence of other household members affected by performance in the arts?
+* Is participation in various arts activities more indicative or predictive of a respondent's marital status or of their age than of the respondent's income?
+
+## Data Ciation
+
+National Endowment for the Arts. Local Area Arts Participation Study 1992. Ann Arbor, MI: Inter-university Consortium for Political and Social Research [distributor], 2015-03-23. https://doi.org/10.3886/ICPSR35586.v1
+
+**Link to NADAC (National Archive of Data on Arts and Culture) site from which data was downloaded:** https://www.icpsr.umich.edu/web/NADAC/studies/35586

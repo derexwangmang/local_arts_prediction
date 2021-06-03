@@ -41,3 +41,112 @@ Tibble
 
 `opera` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended a live classical music performance in the last 12 months
 
+`nopera` = number of times the respondent attended a live opera performance in the last 12 months
+
+`musical` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended a live musical stage performance or operetta in the last 12 months
+
+`nmusical` = number of times the respondent attended a live musical stage performance in the last 12 months
+
+`play` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended a live non-musical stage performance in the last 12 months
+
+`nplay` = number of times the respondent attended a live non-musical stage performance in the last 12 months
+
+`ballet` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended a ballet performance in the last 12 months
+
+`nballet` = number of times the respondent attended a live ballet performance in the last 12 months
+
+`odance` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended a live dance performance other than ballet in the last 12 months
+
+`nodance` = number of times the respondent attended a live dance performance other than ballet in the last 12 months
+
+`museum` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent visited a museum in the last 12 months
+
+`nmuseum` = number of times the respondent visited a museum in the last 12 months
+
+`fair` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended an art/craft fair in the last 12 months
+
+`nfair` = number of times the respondent visited an art/craft fair in the last 12 months
+
+`park` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent visited a historic park or monument or toured buildings or neighborhoods for their historic or design value in the last 12 months
+
+`npark` = number of times the respondent visited a historic park or monument or toured buildings or neighborhoods for their historic or design value in the last 12 months
+
+`books` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent read any books during the last 12 months, with the exception of books required for work or school
+
+`nbooks` = number of books the respondent read in the last 12 months
+
+`readplay` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent read any plays during the last 12 months
+
+`readpoet` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent read any poetry during the last 12 months
+
+`readnov` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent read any novels or short stores in the last 12 months
+
+`hearpoet` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent listened to any live or recorded poetry reading in the last 12 months
+
+`hearnov` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent listened to any live or recorded reading of novels or books in the last 12 months
+
+`tvjazz` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent watched a jazz performance on TV or VCR in last 12 months
+
+`ntvjazz` = number of times respondent watched a jazz performance on TV or VCR in the last 12 months
+
+`tvclass` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent watched a classical music performance on TV or VCR in last 12 months
+
+`ntvclass` = number of times respondent watched a classical music performance on TV or VCR in the last 12 months
+
+`tvopera` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent watched an opera performance on TV or VCR in last 12 months
+
+`ntvopera` = number of times respondent watched an opera performance on TV or VCR in the last 12 months
+
+`tvmus` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent watched a musical stage play or operetta on TV or VCR in last 12 months
+
+`ntvmus` = number of times respondent watched a musical stage play or operetta on TV or VCR in the last 12 months
+
+`tvplay` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent watched a non-musical stage play on TV or VCR in last 12 months
+
+`ntvplay` = number of times respondent watched a non-musical stage play on TV or VCR in the last 12 months
+
+`tvdance` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent watched a dance performance, like ballet, modern, folk, or tap, on TV or VCR in last 12 months
+
+`ntvdance` = number of times respondent watched a dance performance, like ballet, modern, folk, or tap, on TV or VCR in the last 12 months
+
+`tvart` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent watched a program about artists, art works, or art museums on TV or VCR in last 12 months
+
+`ntvart` = number of times respondent watched a program about artists, art works, or art museums on TV or VCR in the last 12 months
+
+`lisjazz` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent listened to jazz performances on the radio, on records, tapes or compact disks in last 12 months
+
+`lisclass` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent listened to classical music on the radio, on records, tapes or compact disks in last 12 months
+
+`lisopera` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent listened to opera music on the radio, on records, tapes or compact disks in last 12 months
+
+`lismus` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent listened to a musical stage play or operetta on the radio, on records, tapes or compact disks in last 12 months
+
+`lisplay` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent listened to stage play on the radio, on records, tapes or compact disks in last 12 months
+
+`cinema` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent went out to a movie theater to see a movie in the last 12 months
+
+`more1` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently
+
+`more2` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (second answer)
+
+`more3` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (third answer)
+
+`more4` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (fourth answer)
+
+`more5` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (fifth answer)
+
+`more6` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (sixth answer)
+
+`more7` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (seventh answer)
+
+`more8` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (eight answer)
+
+`moremost` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would MOST like to attend more frequently
+
+`gomore` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent would, in general, like to attend cultural and artistic events more often than they have in the last 12 months
+
+
+
+
+
+
