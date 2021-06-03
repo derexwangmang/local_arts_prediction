@@ -23,13 +23,13 @@ Tibble
 
 ## Variables
 
-`caseid` = sequential record id
+** next to variable means it was removed before feeding the data to the models
 
-`site` = site
+`caseid`** = sequential record id
 
-`abtid` = hidden variable representing personal information about the respondent
+`site`** = site
 
-`exchange` = hidden variable representing the 3-digit exchange of the respondent
+`abtid`** = hidden variable representing personal information about the respondent
 
 `jazz` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended a live jazz performance in the last 12 months
 
@@ -129,24 +129,77 @@ Tibble
 
 `more2` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (second answer)
 
-`more3` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (third answer)
+`more3`** = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (third answer)
 
-`more4` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (fourth answer)
+`more4`** = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (fourth answer)
 
-`more5` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (fifth answer)
+`more5`** = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (fifth answer)
 
-`more6` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (sixth answer)
+`more6`** = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (sixth answer)
 
-`more7` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (seventh answer)
+`more7`** = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (seventh answer)
 
-`more8` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (eight answer)
+`more8`** = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would like to attend more frequently (eight answer)
 
 `moremost` = has 8 levels, `(01) Jazz music`, `(02) Classical music`, `(03) Operas`, `(04) Musicals`, `(05) Plays`, `(06) Ballet`, `(07) Other dance`, `(08) Art museums/galleries`, indicating which kind of arts of event the participant would MOST like to attend more frequently
 
 `gomore` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent would, in general, like to attend cultural and artistic events more often than they have in the last 12 months
 
+`bar1` = has 17 levels, `(01) Lack of interest`, `(02) Don't have time`, `(03) Cost of tickets`, `(04) Overall cost`, `(05) Tickets sold out`, `(06) Transportation/traffic/parking`, `(07) Distance/travel time`, `(08) Crime`, `(09) Lack of child care`, `(10) Poor quality of performance`, `(11) Not available/no variety`, `(12) No one to go with`, `(13) Handicap problem`, `(14) Age problem`,  `(15) Prefer to watch TV`, `(16) Just don't get around to it`, `(95) Other`, indicating the reason the respondent did not attend arts events more often (first answer)
+
+`bar2`** = has 17 levels, `(01) Lack of interest`, `(02) Don't have time`, `(03) Cost of tickets`, `(04) Overall cost`, `(05) Tickets sold out`, `(06) Transportation/traffic/parking`, `(07) Distance/travel time`, `(08) Crime`, `(09) Lack of child care`, `(10) Poor quality of performance`, `(11) Not available/no variety`, `(12) No one to go with`, `(13) Handicap problem`, `(14) Age problem`,  `(15) Prefer to watch TV`, `(16) Just don't get around to it`, `(95) Other`, indicating the reason the respondent did not attend arts events more often (second answer)
 
 
+`bar3`** = has 17 levels, `(01) Lack of interest`, `(02) Don't have time`, `(03) Cost of tickets`, `(04) Overall cost`, `(05) Tickets sold out`, `(06) Transportation/traffic/parking`, `(07) Distance/travel time`, `(08) Crime`, `(09) Lack of child care`, `(10) Poor quality of performance`, `(11) Not available/no variety`, `(12) No one to go with`, `(13) Handicap problem`, `(14) Age problem`,  `(15) Prefer to watch TV`, `(16) Just don't get around to it`, `(95) Other`, indicating the reason the respondent did not attend arts events more often (third answer)
 
+`bar4`** = has 17 levels, `(01) Lack of interest`, `(02) Don't have time`, `(03) Cost of tickets`, `(04) Overall cost`, `(05) Tickets sold out`, `(06) Transportation/traffic/parking`, `(07) Distance/travel time`, `(08) Crime`, `(09) Lack of child care`, `(10) Poor quality of performance`, `(11) Not available/no variety`, `(12) No one to go with`, `(13) Handicap problem`, `(14) Age problem`,  `(15) Prefer to watch TV`, `(16) Just don't get around to it`, `(95) Other`, indicating the reason the respondent did not attend arts events more often (fourth answer)
 
+`bar5`** = has 17 levels, `(01) Lack of interest`, `(02) Don't have time`, `(03) Cost of tickets`, `(04) Overall cost`, `(05) Tickets sold out`, `(06) Transportation/traffic/parking`, `(07) Distance/travel time`, `(08) Crime`, `(09) Lack of child care`, `(10) Poor quality of performance`, `(11) Not available/no variety`, `(12) No one to go with`, `(13) Handicap problem`, `(14) Age problem`,  `(15) Prefer to watch TV`, `(16) Just don't get around to it`, `(95) Other`, indicating the reason the respondent did not attend arts events more often (fifth answer)
+
+`mostimp` = has 18 levels, `(02) Lack of interest`, `(03) Don't have time`, `(04) Cost of tickets`, `(05) Overall cost`, `(06) Tickets sold out`, `(07) Transportation/traffic/parking`, `(08) Distance/travel time`, `(09) Crime`, `(10) Lack of child care`, `(11) Poor quality of performance`, `(12) Not available/no variety`, `(13) No one to go with`, `(14) Handicap problem`, `(15) Age problem`,  `(16) Prefer to watch TV`, `(17) Just don't get around to it`, `(18) Not enough info on events`, `(95) Other`, indicating the respondent's most important reason for not attending more arts events
+
+`howimp` = has 3 levels, `(1) Very important`, `(2) Somewhat important`, `(3) Not at all important`, indicating how important the respondent feels it is to attend/take part in arts activities and events
+
+`schools` = has 3 levels, `(1) Very important`, `(2) Somewhat important`, `(3) Not at all important`, indicating how important the respondent feels it is to to offer activities such as music, dance, theater, and art in schools
+
+`source1` = has 11 levels, `(01) Newspapers`, `(02) Word of mouth`, `(03) Friends/relatives/others`, `(04) Direct mail`, `(05) Posters/notices`, `(06) Television`, `(07) Radio`, `(08) Magazines`, `(09) School notices`, `(10) Telemarketing`, `(95) Other` indicating how the respondent learned about arts events in their community
+
+`source2`** = has 12 levels, `(00) 0`, `(01) Newspapers`, `(02) Word of mouth`, `(03) Friends/relatives/others`, `(04) Direct mail`, `(05) Posters/notices`, `(06) Television`, `(07) Radio`, `(08) Magazines`, `(09) School notices`, `(10) Telemarketing`, `(95) Other` indicating how the respondent learned about arts events in their community (second answer)
+
+`source3`** = has 12 levels, `(00) 0`, `(01) Newspapers`, `(02) Word of mouth`, `(03) Friends/relatives/others`, `(04) Direct mail`, `(05) Posters/notices`, `(06) Television`, `(07) Radio`, `(08) Magazines`, `(09) School notices`, `(10) Telemarketing`, `(95) Other` indicating how the respondent learned about arts events in their community (third answer)
+
+`source4`** = has 12 levels, `(00) 0`, `(01) Newspapers`, `(02) Word of mouth`, `(03) Friends/relatives/others`, `(04) Direct mail`, `(05) Posters/notices`, `(06) Television`, `(07) Radio`, `(08) Magazines`, `(09) School notices`, `(10) Telemarketing`, `(95) Other` indicating how the respondent learned about arts events in their community (fourth answer)
+
+`source5`** = has 12 levels, `(00) 0`, `(01) Newspapers`, `(02) Word of mouth`, `(03) Friends/relatives/others`, `(04) Direct mail`, `(05) Posters/notices`, `(06) Television`, `(07) Radio`, `(08) Magazines`, `(09) School notices`, `(10) Telemarketing`, `(95) Other` indicating how the respondent learned about arts events in their community (fifth answer)
+
+`newsp`** = has 4 levels, `(01) Verbatim answer recorded`, `(97) None`, `(98) Don't know`, `(99) Refused`, indicating which newspapers (if any) the respondent learned about arts events from
+
+`tvtype`** = has 5 levels, `(1) Cable TV`, `(2) Network TV`, `(3) Both`, `(4) Don't know`, `(5) Refused`, indicating what kind of tv the respondent learned about arts events from 
+
+`radio`** = has 4 levels, `(01) Verbatim answer recorded`, `(97) None`, `(98) Don't know`, `(99) Refused`, indicating which radio stations (if any) the respondent learned about arts events from
+
+`mags`** = has 4 levels, `(01) Verbatim answer recorded`, `(97) None`, `(98) Don't know`, `(99) Refused`, indicating which magazines (if any) the respondent learned about arts events from
+
+`rateinfo` = has 4 levels, `(1) Excellent`, `(2) Good`, `(3) Fair`, `(4) Poor`, indicating how the respondent would rate the availability and adequacy of information about arts events in their area
+
+`hhsize` = number of people in respondent's household
+
+`over18` = number of people in respondent's household that are 18 years old or older
+
+`age` = age of respondent
+
+`marital` = has 5 levels, `(1) Married`, `(2) Widowed`, `(3) Separated`, `(4) Divorced`, `(5) Never married`, indicating the martial status of the respondent
+
+`educ` = has 10 levels, `(01) No school`, `(02) Grades k-8`, `(03) Grades 9-11`, `(04) High school`, `(05) Vocational school`, `(06) Some college`, `(07) Bachelors degree`,  `(08) Some grad. school`, `(09) Grad. degree`, `(95) Other`, indicating the highest grade of school or highest degree the respondent has completed
+
+`race` = has 10 levels, `(01) White, not Hispanic`, `(02) Black`, `(03) Hispanic/Latino`, `(04) Carribean`, `(05) Central American`, `(06) South American`, `(07) Native American`, `(08) Alaskan Native`, `(09) Asian/Pacific Islander/Filipino`,
+`(95) Other`, indicating the respondent's name
+
+`income` = has 9 levels, `Under $10,000`, `$10,000 to $14,999`, `$15,000 to $19,999`, `$20,000 to $29,999`, `$30,000 to $39,999`, `$40,000 to $49,999`, `$50,000 to $74,999`, `$75,000 to $99,999`, `$100,000 or more`, indicating the respondent's household income in 1991
+
+`gender` = has 2 levels, `(1) Male`, `(2) Female`, indicating the respondent's gender
+
+`weight` = weighing factor
+
+`exchange`** = hidden variable representing the 3-digit exchange of the respondent
 
