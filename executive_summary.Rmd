@@ -1,0 +1,51 @@
+---
+title: "Executive Summary"
+author: "Elena Andrews and Derex Wangmang"
+date: "6/3/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, messages = FALSE, warnings = FALSE)
+```
+
+## Load Necessary Packages
+
+```{r load-packages}
+library(tidyverse)
+library(tidymodels)
+library(naniar)
+library(skimr)
+library(kableExtra)
+library(vip)
+```
+
+## Introduction: Local Arts 
+
+The arts are an integral and enriching aspect of society. It was our collective love of the arts and interest in the dynamics of arts engagement in the United States that drew us to the Local Area Arts Participation study from 1992. This study collected information on 5,040 total Americans from 12 different localities (Broward County, Chicago, Dade County, Las Vegas, Pittsburgh, Reno, Rural Nevada, San Jose, Seattle, Sedona, Winston-Salem) about their engagement local arts, as well as recorded arts content. Variables in the data-set included such things as how frequently the respondent had gone to a live jazz concert in the past year, whether or not they had attended a movie in the theaters in the past year, the number of books the respondent had read in the last year, as well as demographic information like age, race, marital status, gender and household income. The  study was funded by the National Endowment for the Arts (Research Division) and conducted by Abt Associates of Cambridge, MA. We were especially interested in the accessibility of local arts, and thus we decided to utilize the variables in the Local Area Arts Participation study to predict the household income of the respondent. In this executive summary, we will give a short overview of our predictive modeling project, highlighting in particular our outcome variable, the models tuned and their performance, and the final performance of our best model on the testing data. 
+
+## Outcome Variable
+
+The outcome variable used in this project was `income`. After removing missing values, this variable had 9 levels, each representing an income bracket: `Under $10,000`, `$10,000 to $14,999`, `$15,000 to $19,999`, `$20,000 to $29,999`, `$30,000 to $39,999`, `$40,000 to $49,999`, `$50,000 to $74,999`, `$75,000 to $99,999`, `$100,000 or more`. Below is a graph of the distribution of `income` after removing missing values.
+
+```{r}
+# load the cleaned data ---------------------------
+load(file = "data/processed/local_arts_data.Rda")
+
+
+# remove NA values of income -----------
+local_arts_data <- local_arts_data %>% 
+  filter(!is.na(income))
+
+# Distribution of income (graph) -------------
+local_arts_data %>%
+  ggplot(aes(x = income)) +
+  geom_bar() +
+  coord_flip() +
+  labs(
+    title = "Distribution of Respondent's Household Income"
+  ) +
+  theme_minimal()
+```
+
+

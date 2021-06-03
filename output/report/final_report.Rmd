@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 ## Load Necessary Packages
 
-```{r}
+```{r load-packages}
 library(tidyverse)
 library(tidymodels)
 library(naniar)
