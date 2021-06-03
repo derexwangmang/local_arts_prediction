@@ -17,7 +17,7 @@ load(file = "output/models/rf_tuned.rda")
 # Evaluated Random Forest Model -------------------------------------------
 # show best
 rf_tuned %>% 
-  show_best(metric = "roc_auc")
+  show_best(metric = "accuracy")
 
 # autoplot
 # specify roc_auc as my performance measure

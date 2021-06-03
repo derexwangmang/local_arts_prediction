@@ -1,0 +1,43 @@
+---
+title: "Local Arts Data Codebook"
+author: "Elena Andrews and Derex Wangmang"
+date: "6/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description
+
+This is the main dataset used in this predictive modeling project. It contains data from the Local Area Arts Participation study in 1992, funded by the National Endowment for the Arts (Research Division) and conducted by Abt Associates of Cambridge, MA. There are 88 variables (note: through our pre-modeling analysis process, 22 variables were removed, and thus only 66 variables were used in the modeling process).
+
+## Usage
+
+`local_arts_data`
+
+## Format
+
+Tibble
+
+## Variables
+
+`caseid` = sequential record id
+
+`site` = site
+
+`abtid` = hidden variable representing personal information about the respondent
+
+`exchange` = hidden variable representing the 3-digit exchange of the respondent
+
+`jazz` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended a live jazz performance in the last 12 months
+
+`njazz` = number of times the respondent attended a live jazz concert in the last 12 months
+
+`classic` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended a live classical music performance in the last 12 months
+
+`nclassic` = number of times the respondent attended a live classical music concert in the last 12 months
+
+`opera` = has two levels, `(1) Yes` and `(2) No`, indicating whether or not respondent attended a live classical music performance in the last 12 months
+
