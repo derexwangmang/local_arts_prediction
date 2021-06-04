@@ -1,7 +1,7 @@
 ---
 title: "Local Arts Data Codebook"
 author: "Elena Andrews and Derex Wangmang"
-date: "6/2/2021"
+date: "6/9/2021"
 output: html_document
 ---
 
@@ -149,7 +149,6 @@ Tibble
 
 `bar2`** = has 17 levels, `(01) Lack of interest`, `(02) Don't have time`, `(03) Cost of tickets`, `(04) Overall cost`, `(05) Tickets sold out`, `(06) Transportation/traffic/parking`, `(07) Distance/travel time`, `(08) Crime`, `(09) Lack of child care`, `(10) Poor quality of performance`, `(11) Not available/no variety`, `(12) No one to go with`, `(13) Handicap problem`, `(14) Age problem`,  `(15) Prefer to watch TV`, `(16) Just don't get around to it`, `(95) Other`, indicating the reason the respondent did not attend arts events more often (second answer)
 
-
 `bar3`** = has 17 levels, `(01) Lack of interest`, `(02) Don't have time`, `(03) Cost of tickets`, `(04) Overall cost`, `(05) Tickets sold out`, `(06) Transportation/traffic/parking`, `(07) Distance/travel time`, `(08) Crime`, `(09) Lack of child care`, `(10) Poor quality of performance`, `(11) Not available/no variety`, `(12) No one to go with`, `(13) Handicap problem`, `(14) Age problem`,  `(15) Prefer to watch TV`, `(16) Just don't get around to it`, `(95) Other`, indicating the reason the respondent did not attend arts events more often (third answer)
 
 `bar4`** = has 17 levels, `(01) Lack of interest`, `(02) Don't have time`, `(03) Cost of tickets`, `(04) Overall cost`, `(05) Tickets sold out`, `(06) Transportation/traffic/parking`, `(07) Distance/travel time`, `(08) Crime`, `(09) Lack of child care`, `(10) Poor quality of performance`, `(11) Not available/no variety`, `(12) No one to go with`, `(13) Handicap problem`, `(14) Age problem`,  `(15) Prefer to watch TV`, `(16) Just don't get around to it`, `(95) Other`, indicating the reason the respondent did not attend arts events more often (fourth answer)
@@ -202,4 +201,3 @@ Tibble
 `weight` = weighing factor
 
 `exchange`** = hidden variable representing the 3-digit exchange of the respondent
-
