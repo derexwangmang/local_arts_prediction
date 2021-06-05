@@ -160,5 +160,5 @@ The diagonal line on this graph shows accurate predictions. The boxes in the dia
 
 ## Conclusion
 
-Unfortunately, the data in the Local Area Arts Participation Study proved to not be very predictive of respondent income. It is very likely that, well financial status can increase one's ability to attend arts events, arts participation, particularly local arts participation, is a lot more about individual interest and time. In the future, it would be interesting to try to predict other variables in this data-set, such as age or marital status, or perhaps try to investigate the connection between arts participation and income on a more national scale. 
+Unfortunately, the data in the Local Area Arts Participation Study proved to not be very predictive of respondent income. It is very likely that, while financial status can increase one's ability to attend arts events, arts participation, particularly local arts participation, is a lot more about individual interest and time. In the future, it would be interesting to try to predict other variables in this data-set, such as age or marital status, or perhaps try to investigate the connection between arts participation and income on a more national scale. 
 
