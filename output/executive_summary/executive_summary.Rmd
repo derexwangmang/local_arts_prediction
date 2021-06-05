@@ -27,7 +27,7 @@ library(vip)
 
 ## Introduction: Local Arts 
 
-The arts are an integral and enriching aspect of society. It was our collective love of the arts and interest in the dynamics of arts engagement in the United States that drew us to the Local Area Arts Participation study from 1992. This study collected information on 5,040 total Americans from 12 different localities (Broward County, Chicago, Dade County, Las Vegas, Pittsburgh, Reno, Rural Nevada, San Jose, Seattle, Sedona, Winston-Salem) about their engagement local arts, as well as recorded arts content. Variables in the dataset included such things as how frequently the respondent had gone to a live jazz concert in the past year, whether or not they had attended a movie in the theaters in the past year, the number of books the respondent had read in the last year, as well as demographic information such as age, race, marital status, gender and household income. The study was funded by the National Endowment for the Arts (Research Division) and conducted by Abt Associates of Cambridge, MA. We were especially interested in the accessibility of local arts, and thus we decided to utilize the variables in the Local Area Arts Participation study to predict the household income of the respondent. In this executive summary, we will give a short overview of our predictive modeling project, highlighting in particular our outcome variable, the models tuned and their performance, and the final performance of our best model on the testing data.
+The arts are an integral and enriching aspect of society. It was our collective love of the arts and interest in the dynamics of arts engagement in the United States that drew us to the Local Area Arts Participation study from 1992. This study collected information on engagement with live and recorded local arts for 5,040 total Americans from 12 different localities (Broward County, Chicago, Dade County, Las Vegas, Pittsburgh, Reno, Rural Nevada, San Jose, Seattle, Sedona, Winston-Salem). Variables in the data-set included such things as how frequently the respondent had gone to a live jazz concert in the past year, whether or not they had attended a movie in the theaters in the past year, the number of books the respondent had read in the last year, as well as demographic information such as age, race, marital status, gender, and household income. The study was funded by the National Endowment for the Arts (Research Division) and conducted by Abt Associates of Cambridge, MA. We were especially interested in the accessibility of local arts, and thus we decided to utilize the variables in the Local Area Arts Participation study to predict the household income of the respondent. In this executive summary, we will give a short overview of our predictive modeling project, highlighting in particular our outcome variable, the pre-processing recipes used on our data, the models tuned and their performance, and the final performance of our best model on the testing data.
 
 ## Outcome Variable
 
@@ -53,9 +53,11 @@ local_arts_data %>%
   theme_minimal()
 ```
 
-## Model Training, Tuning, and Performance
+As you can see from the graph, the income brackets `$50,000 to $74,999`, `$30,000 to $39,999`, and `$20,000 to $29,999` had the most values, while `$100,000 or more`, `$75,000 to $99,999`, and `$10,000 to $14,999` had the least number of values (less than half that of the levels with the most values). This imbalance lead us to stratify our initial split and our v-fold-cross validation by `income` to ensure that certain levels were not over or under represented between the training and testing data and across the folds. 
 
-We trained six models: the boosted tree, elastic net, k-nearest neighbors, neural network, random forest, and support vector machine. Four of the models contained the same recipe. This recipe contained an initialization step in which the recipe was established, identifying `income` as our outcome, and all other variables as predictors. Next, the recipe contains an imputation step for missingness using bagged-tree models via `step_bag_impute`. Then we added `step_YeoJohnson` for all numeric variables, making numeric predictors symmetrical. The two `step_other` steps, one for `educ` and one for `race`, indicate that, for both `educ` and `race`, the bottom 1% of levels should be combined into a single `other` level, as both had levels with very few values in them. `step_dummy` dummy encoded all categorical variables, excluding the outcome variable. `step_normalize` centered and scaled all predictors while `step_zv` was included to remove any predictors with zero variance after dummy coding, which are essentially constants in the data and thus hold no predictive information. It is shown below.
+## Recipes
+
+We trained six models: the boosted tree, elastic net, k-nearest neighbors, neural network, random forest, and support vector machine. Four of the models (elastic net, k-nearest neighbors, neural network, and support vector machine) utilized the same data-preprocessing recipe. This recipe had 8 steps. The first was an initialization step in which the recipe was established with `income` as the outcome, and all other variables as predictors. Next, the recipe contained an imputation step for missingness. We decided to use `step_bag_impute`, which employs a bagged-tree method to impute missing values across all predictors. Then we added `step_YeoJohnson` for all numeric variables. This ensures that all numeric predictors are symmetrical. The two `step_other` steps, one for `educ` and one for `race`, indicate that, for both `educ` and `race`, the bottom 1% of levels should be combined into a single `other` level, as both had levels with very few values in them. `step_dummy` dummy encoded all categorical variables, excluding the outcome variable. `step_normalize` centered and scaled all predictors, while `step_zv` was included to remove any predictors with zero variance after dummy coding. Variables with zero-variance are essentially constants in the data and thus hold no predictive information. This recipe is shown below.
 
 ```{r recipe-1, eval = F}
 # recipe used for knn, neural net, elastic net and support vector machine
@@ -78,7 +80,11 @@ recipe1 <-
   step_zv(all_predictors())
 ```
 
-To ensure that we could compare each model's performance to another's and avoid overfitting to the training dataset, we leveraged k-fold cross validation. Specifically, we used 5-fold cross-validation with 3 repeats. For each model, we identified and tuned parameters. Then, we evaluated how each model performed across the folds. To evaluate performance, the metric we decided to use was the area under the receiver operating curve, or roc-auc. Roc-auc gives us a measure of how well our model can differentiate between the different classes of our outcome variable. An roc-auc value closer to one means the model performs better. An roc-auc value of 0.5 would mean that the model performs no better than if we had simply predicted the outcome values at random.
+For the random forest model, we decided to use all steps in the above recipe except the `step_dummy` step. Random forest models do not require categorical variables to be in a numeric form, and leaving these variables in their natural state decreased the run time of the model slightly and possibly increased performance, which is advantageous. Finally, for the boosted tree model, we decided to one-hot encode the categorical variables instead of simply dummy coding, which increased the performance of the model.
+
+## Model Training, Tuning, and Performance
+
+To ensure that we could compare each model's performance to another's, and avoid overfitting to the training dataset, we leveraged k-fold cross validation. Specifically, we used 5-fold cross-validation with 3 repeats. For each model, we identified and tuned parameters. Then, we evaluated how each model performed across the folds. To evaluate performance, the metric we decided to use was the area under the receiver operating curve, or roc-auc. Roc-auc gives a measure of how well our model can differentiate between the different classes of our outcome variable. If the roc-auc value is closer to one, this means the model does particularly well at accurately differentiating between the various classes of the outcome. If the roc-auc value is closer to 0.5, it means that the model performs no better than if we had simply predicted the outcome values at random.
 
 Each model's performance is shown below.
 
@@ -104,17 +110,17 @@ best_models %>%
   kable_styling()
 ```
 
-As you can see, the random forest model performs the best out of all the model types, producing an roc-auc value of 0.712. Furthermore, there is no overlap between standard error of the best random forest and the standard error of the best boosted tree, the second highest performing model. This gives us conclusive evidence that the random forest model is our best performing model, and thus the model that we will use to predict the outcome values on our test data.
+The random forest model clearly performs the best out of all the model types as it produces an roc-auc value of 0.712. Even when taking into account the standard errors of both the random forest model, and the boosted tree, the second highest performing model, the roc-auc value of the random forest model is still greater than that of the boosted tree. This gives us conclusive evidence that the random forest model is our best performing model, and thus the model that we will use to predict the outcome values on our test data.
 
 ## Random Forest's Performance on Testing Data
 
-After we identified the random forest as the model with the best performance, we then selected the parameters that led to the best performance in the folds. We used these parameters as part of the final model. This fitted model is what was used to predict values of `income` using the testing data. The code used to do these two steps is printed below.
+After we identified the random forest as the model with the best performance, we then selected the parameters that led to the best performance in the folds. This was an `mtry` value of 33 and a `min_n` value of 40. We used these parameters as part of the final model. This fitted model is what was used to predict values of `income` using the testing data. The code used to do these two steps is printed below.
 
 ```{r finalizing-and-fitting, eval = F}
 # set seed
 set.seed(1234)
 
-# finalize workflow
+# finalize workflow with best performing parameters
 rf_final_workflow <- rf_workflow %>% 
   finalize_workflow(select_best(rf_tuned, metric = "roc_auc"))
 
@@ -124,13 +130,14 @@ rf_final_results <- fit(rf_final_workflow, local_arts_train)
 
 ```{r roc-auc-val}
 load("output/models/random_forest_predictions.rda")
+
 rf_final_pred %>%
   roc_auc(truth = income, `.pred_Under $10,000`, `.pred_$10,000 to $14,999`, `.pred_$15,000 to $19,999`,
                      `.pred_$20,000 to $29,999`, `.pred_$30,000 to $39,999`, `.pred_$40,000 to $49,999`,
                      `.pred_$50,000 to $74,999`, `.pred_$75,000 to $99,999`, `.pred_$100,000 or more`)
 ```
 
-The overall roc-auc value is 0.715, which is similar to the random forest's performance in the cross-validated folds, indicating that the cross-validated folds prevented overfitting and led to an accurate assessment of the data. How about its performance across different classes?
+The overall roc-auc value of our randomm forest model on the test data is 0.715, which is similar to the random forest's performance in the cross-validated folds, indicating that the cross-validated folds prevented overfitting and led to an accurate assessment of the data. We thought it would also be important, however, to look at a break down of the performance of the random forest model across the different classes of our outcome. This can be achieved by assessing the roc curves, which are printed below. 
 
 ```{r roc-auc-plot}
 rf_final_pred %>%
@@ -140,4 +147,18 @@ rf_final_pred %>%
   autoplot()
 ```
 
-The roc-auc plots indicate that the random forest predicts the `Under $10,000` and `$50,000 to $74,999` income bracket well. For the rest of the income levels however, performance is significantly worse. For the income brackets starting with `$20,000`, `$30,000`, and `$40,000`, the model fails to accurately distinguish between the correct class and a different, incorrect class. It may have been that none of the variables may have been good predictors for the income level, causing the random forest to essentially default to the classes with the highest proportion.
+The roc-auc plots indicate that the random forest predicts the `Under $10,000` and `$50,000 to $74,999` income bracket well. For the rest of the income levels however, performance is significantly worse. For the income brackets starting with `$20,000`, `$30,000`, and `$40,000`, the model fails to accurately distinguish between the correct class and a different, incorrect class. It may have been that none of the variables were good predictors for income level, causing the random forest to essentially default to the classes with the most values.
+
+These findings are corroborated by also looking at a confusion matrix.
+
+```{r confusion-matrix}
+conf_mat(rf_final_pred, truth = income, estimate = .pred_class) %>%
+  autoplot(type = "heatmap")
+```
+
+The diagonal line on this graph shows accurate predictions. The boxes in the diagonal indicate that the random forest model predicts the `Under $10,000`, and `$50,000 to $74,999` income brackets fairly well. For the rest of the income levels however, performance is significantly worse. The model predicted a lot of the values of the `$20,000 to $29,000` income bracket correctly, but also tended to predict a lot of *other* outcome values that weren't really part of this class as incorrectly belonging to the `$20,000 to $29,000` class. You can see this by how full and shaded in all of the boxes are in the row for predicted as `$20,000 to $29,000` compared to the other classes. As the roc curve showed, the model was not good at differentiating between the `$20,000 to $29,000` class and other classes of the outcome. Interestingly, as you can see along the diagonal, the random forest model predicted *none* of the observations in the `$75,000 to $99,999` class correctly. In fact, the model did not classify ANY outcome values as belonging to this class.
+
+## Conclusion
+
+Unfortunately, the data in the Local Area Arts Participation Study proved to not be very predictive of respondent income. It is very likely that, well financial status can increase one's ability to attend arts events, arts participation, particularly local arts participation, is a lot more about individual interest and time. In the future, it would be interesting to try to predict other variables in this data-set, such as age or marital status, or perhaps try to investigate the connection between arts participation and income on a more national scale. 
+
