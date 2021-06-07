@@ -2,7 +2,7 @@
 library(tidyverse)
 library(tidymodels)
 library(stacks)
-library(earth)
+library(keras)
 
 # handle common conflicts
 tidymodels_prefer()

@@ -477,31 +477,61 @@ rf_recipe <-
 
 ## Models
 
-We created six models. For each model, we selected certain parameters to tune, to identify the values of those parameters that would lead to the best performance. The models we selected and the parameters chosen to tuned in each are outlined below. (Note: each model was tuned in a separate r-script. These scripts can be found in the `models` folder located inside the `output` folder of our project directory.)
+We created six models. For each model, we selected certain parameters to tune, to identify the values of those parameters that would lead to the best performance. The models we selected, the parameters chosen to tune in each, and the grid specifications are outlined below. (Note: each model was tuned in a separate r-script. These scripts can be found in the `models` folder located inside the `output` folder of our project directory.)
 
 * **Boosted Tree**: The boosted tree is an ensemble model that combines subsets of weaker trees. It builds regression trees iteratively; that is, each tree builds on the tree that came before it and minimizes the errors.
-  * mtry: indicates the number of predictors randomly sampled at each split
-  * min_n: the minimum number of data points at the end of a branch
-  * learn_rate: rate at which algorithm adapts from iteration-to-iteration
+  * Parameters:
+    * mtry: indicates the number of predictors randomly sampled at each split
+    * min_n: the minimum number of data points at the end of a branch
+    * learn_rate: rate at which algorithm adapts from iteration-to-iteration
+  * Grid  Used: 
+    * Regular grid with 5 levels for each parameter, for a total of 125 parameter combinations
+  * Package Used:
+    * `xgboost`
   
 * **Elastic Net**: This model focuses on adding regularization to the ordinary least squares model, preferring some bias over high variance. To do this, the elastic net regression adds a penalty that shrinks the slopes of the various parameters in the model. In Ridge and Lasso regression, the penalty is set whereas in the generalized elastic net, the Ridge and Lasso is combined. The major difference between Lasso and Ridge regression is that lasso has the capability to get rid of unimportant parameters completely by shrinking their coefficients to zero. An elastic net model can either be completely ridge, or completely lasso regression, or somewhere in between. This is controlled via the `mixture` parameter.
-  * penalty: represents the amount of regularization
-  * mixture: proportion of L1 (Lasso) regularization
+  * Parameters: 
+    * penalty: represents the amount of regularization
+    * mixture: proportion of L1 (Lasso) regularization
+  * Grid Used: 
+    * Regular grid with 7 levels for each parameter, for a total of 49 parameter combinations
+  * Package Used:
+    * `glmnet`
   
-* **K-Nearest Neighbors**: The nearest neighbor model predicts new points by averaging values of the k most similar observations in the reference data to the new data point, with similar observations being closer in distance than different observations.
-  * neighbors: the number of neighbors taken into account
+* **K-Nearest Neighbors**: The nearest neighbor model predicts new points by averaging values of the k most similar observations in the reference data to the new data point, with similar observations being closer in distance than different observations. (Note: we had flagged this model for use in an ensemble by keeping the predictions and workflow after tuning, but we did not end up using the ensemble due to incompatability issues with our outcome variable.)
+  * Parameters:
+    * neighbors: the number of neighbors taken into account
+  * Grid Used:
+    * Regular grid with 20 levels
+  * Package Used:
+    * `kknn`
   
-* **Neural Network**: Also known as multilayer perceptrons, this model starts out with a set of weights that are adjusted based on a correct or incorrect classification.
-  * hidden_units: number of units in hidden model
-  * penalty: amount of weight decay
+* **Neural Network**: Also known as multilayer perceptrons, neural networks contain layers that each have perceptrons (also known as "hidden units") within them. The data is fed through these layers, and each layer transforms the data in some meaningful way so that the this model can classify the input accurately. Each layer is associated with a weight and a bias that controls whether or not a perceptron inside a layer will "fire" (ie release an output) when the input is fed to it. All layers start with an arbitrary weight value, and then, over various iterations (or epochs), the neural network will adjust the weights based on the error of the output from the actual values (given by a loss function). (Note: we had flagged this model for use in an ensemble by keeping the predictions and workflow after tuning, but we did not end up using the ensemble due to incompatability issues with our outcome variable.)
+  * Parameters:
+    * hidden_units: number of perceptrons inside a layer
+    * penalty: amount of weight decay
+  * Grid Used:
+    * Regular grid with 5 levels for each parameter, for a total of 25 parameter combinations
+  * Package Used:
+    * `keras`
   
 * **Random Forest**: The random forest is an ensemble model that combines a set of decision trees. For each decision tree, a random set of input variables are included. Then for the test data, the random forest considers the "vote" from each tree, with the class receiving the highest "vote" serving as the classification.
-  * mtry: indicates the number of predictors randomly sampled at each split
-  * min_n: the number of data points required for node to be split further
+  * Parameters:
+    * mtry: indicates the number of predictors randomly sampled at each split
+    * min_n: the number of data points required for node to be split further
+  * Grid Used:
+    * Regular grid with 5 levels for each parameter, for a total of 25 parameter combinations
+  * Package Used:
+    * `ranger`
   
-* **Support Vector Machine**: This model identifies a classifying hyperplane that maximizes the margin, the distance between it and the nearest data point.
-  * cost: cost of predicting a sample within/on wrong side of margin
-  * rbf_sigma: precision parameter for radial basis function
+* **Support Vector Machine**: This model identifies a maximal margin classifying hyperplane (meaning it maximizes the distance between it and the nearest data points) that splits the data into the appropriate classes. (Note: we had flagged this model for use in an ensemble by keeping the predictions and workflow after tuning, but we did not end up using the ensemble due to incompatability issues with our outcome variable.)
+  * Parameters:
+    * cost: cost of predicting a sample within/on wrong side of margin
+    * rbf_sigma: precision parameter for radial basis function
+  * Grid Used:
+    * Regular grid with 10 levels for each parameter, for a  total of 100 parameter combinations
+  * Package Used:
+    * `kernlab`
 
 ## Evaluating Model Performance
 
@@ -542,7 +572,7 @@ load(file = "output/models/rf_tuned.rda")
 autoplot(rf_tuned, metric = "roc_auc")
 ```
 
-The auto-plot shows that the random forest model consistently produced the best roc-auc value with a minimal node size (`min_n`) of 40, except for a small overlap with a `min_n` value of 30 at an `mtry` value of 21. The autoplot also shows that roc-auc increased as the number of randomly selected predictors in a tree, `mtry` increased from 10 to 30, and then dropped off again between 30 and 56. Thus, the combination of parameters that produced the best random forest model was a `min_n` of 40 and an `mtry` value of 33, as you can see in the table below. (Note: it appears as though all five models performed the same because their roc-auc values were rounded to the thousandth decimal. But the model with an `mtry` of 33 and a `min_n` of 40 is at the top).
+The auto-plot shows that the random forest model consistently produced the best roc-auc value with a minimal node size (`min_n`) of 40, except for a small overlap with a `min_n` value of 30 at an `mtry` value of 21. The autoplot also shows that roc-auc increased as the number of randomly selected predictors in a tree, `mtry`, increased from 10 to 33, peaked at 33, and then dropped off again between 30 and 56. Thus, the combination of parameters that produced the best random forest model was a `min_n` value of 40 and an `mtry` value of 33, as you can see in the table below. (Note: it appears as though all five models in the table performed the same because their roc-auc values were rounded to the thousandth decimal. But the model with an `mtry` of 33 and a `min_n` of 40 is at the top).
 
 ```{r best-rf-models}
 # show best performing random forest models
@@ -552,7 +582,7 @@ rf_tuned %>%
 
 ## Finalizing Random Forest Workflow and Variable Importance Plot
 
-Now that we have chosen the random forest model, with a `min_n` of 40 and an `mtry` of 33, as our best model, it is time to finalize the random forest workflow with these parameters, and then fit the random forest model to the entire training data. This fitted model is what will be used to predict values of `income` using the testing data. The code used to do these two steps is printed below.
+Now that we have chosen the random forest model with a `min_n` of 40 and an `mtry` of 33 as our best model, it is time to finalize the random forest workflow with these parameters, and then fit the random forest model to the entire training data. This fitted model is what will be used to predict values of `income` using the testing data. The code used to do these two steps (finalize the workflow and fit to the entire training data) is printed below. (Note: we attempted to read out the finailized and fitted model from our `evaluation.R` script instead of reproducing it here, but the output was simply too large to be pushed to GitHub. Thus, we set the same seed and reproduced the code below for this report).
 
 ```{r finalizing-and-fitting}
 # set seed
@@ -575,7 +605,7 @@ rf_final_results %>%
   vip()
 ```
 
-Interestingly `weight`, which is a variable that gives the weighting factor used for each respondent, ended up being the most important variable used to predict `income`. After that, `age`, `educ`, and `marital` were the second, third, and fourth most predictive variables. This is rather unsurprising, given the correlation we saw between these demographic variables and `income` in our exploratory data analysis. It's also worth noticing that none of the categorical arts participation variables made it into the top 10 most important predictive variables, only two numeric arts participation variables—-`nbooks` and `nfair`. This may potentially be because some categorical and numeric variables are dependent. That is, whether someone attends a play, directly correlates with the number of times that that person attended. Thus, the number of times variable may provide the same information and actually, more information. Out of all the numeric arts participation variables, it makes sense that `nbooks` in particular made it into the top 10 most important predictive variables, given its distinct relationship with `income`.
+Interestingly, `weight`, which is a variable that gives the weighting factor used for each respondent, ended up being the most important variable used to predict `income`. After that, `age`, `educ`, and `marital` were the second, third, and fourth most predictive variables. This is rather unsurprising, given the correlation we saw between these demographic variables and `income` in our exploratory data analysis. It's also worth noticing that none of the categorical arts participation variables made it into the top 10 most important predictive variables, only two numeric arts participation variables—-`nbooks` and `nfair`. This may potentially be because the categorical and numeric arts participation variables essentially represent the same information. In fact, the numeric variables probably give us *more* information about a respondent's engagement in the arts because they show both whether or not a person attended arts events in the last 12 months as well as the *frequency* of that person's engagement with those arts activities. Out of all the numeric arts participation variables, it makes sense that `nbooks` in particular made it into the top 10 most important predictive variables, given its distinct relationship with `income`. Finally, it was clearly a good idea to keep `mostimp` in our data-set (which represents the most important reason why a respondent did not attend more arts events) since it made it on the variable importance plot as the 8th most important variable.
 
 ## Performance on Test Data
 
@@ -589,7 +619,7 @@ rf_final_pred %>%
                      `.pred_$50,000 to $74,999`, `.pred_$75,000 to $99,999`, `.pred_$100,000 or more`)
 ```
 
-The overall roc-auc value is 0.715, which is similar to the random forest's performance in the cross-validated folds. This consistency is a good sign, and signifies that our model didn't overfit to the training data. While informative, this roc-auc value is an average across all classes. How did the performance of our model change across classes? To investigate this question, we can plot ROC curves for each class of our outcome variable. An ROC curve graphs sensitivity (which is the number of true positives, ie correctly classified values of the event class, divided by true positives plus false negatives, ie all members of the event class) by one minus specificity (which is the true negatives, ie all observations correctly classified as not the event class, divided by the true negatives plus false positives, ie all members of the not event class) at different threshold values. A threshold is the decision point at which observations are categorized into a certain class based on the probabilities the model designates for that observation for each class. ROC curves represent better model performance if they are closer to a right angle. An ROC curve that is close to or exactly at, a straight, diagonal line indicates that the model performed no better at distinguishing between the different classes of the outcome than if it had done so by random chance alone. 
+The overall roc-auc value is 0.715, which is similar to the random forest's performance in the cross-validated folds. This consistency is a good sign, and signifies that our model didn't overfit to the training data. While informative, this roc-auc value is an average across all classes. How did the performance of our model change across classes? To investigate this question, we can plot ROC curves for each class of our outcome variable. An ROC curve graphs sensitivity (which is the number of true positives, ie correctly classified values of the event class, divided by true positives plus false negatives, ie all members of the event class) by one minus specificity (which is the true negatives, ie all observations correctly classified as not the event class, divided by the true negatives plus false positives, ie all members of the non-event classes) at different threshold values. A threshold is the decision point at which observations are categorized into certain classes of the outcome variable. For each observation in a new-data set, every model produces probability values for each class of the outcome variable indicating how confident the model is that the observation belongs in that class. The class that produced a probability above the threshold is then the class into which the observation is categorized. ROC curves represent better model performance if they are closer to a right angle. An ROC curve that is close to, or exactly at, a straight, diagonal line indicates that the model performed no better at distinguishing between the given class and any other class of the outcome than if it had done so by random chance alone. 
 
 ```{r roc-auc-plot}
 rf_final_pred %>%
@@ -599,7 +629,7 @@ rf_final_pred %>%
   autoplot()
 ```
 
-The roc-auc plots indicate that the random forest predicts the `Under $10,000` and `$50,000 to $74,999` income bracket well. For the rest of the income levels however, performance is significantly worse. For the income brackets starting with `$20,000`, `$30,000`, and `$40,000`, the curve closely hugs the `y = x` line, indicating that the model is not accurately distinguishing between the correct class and a different, incorrect class.
+The roc-auc plots indicate that the random forest predicts the `Under $10,000`, `$50,000 to $74,999`, and `$100,000 or more` income levels well. For the rest of the income levels, however, performance is significantly worse. For the income brackets starting with `$20,000`, `$30,000`, and `$40,000`, the curve closely hugs the `y = x` line, indicating that the model is not accurately distinguishing between the correct class and a different, incorrect class.
 
 We can more closely examine the performance of our random forest model by reviewing a confusion matrix.
 
@@ -608,20 +638,25 @@ conf_mat(rf_final_pred, truth = income, estimate = .pred_class) %>%
   autoplot(type = "heatmap")
 ```
 
-The predicted classifications are on the y-axis while the true values are on the x-axis. The x-axis starts at `Under $10,000` and goes to `$100,000  or more`. The diagonal indicates where the two meet; in other words, where the predicted value matches the true value.
+The predicted classifications are on the y-axis while the true values are on the x-axis. The x-axis starts at `Under $10,000` and goes to `$100,000  or more`, while the y-axis starts at `$100,000  or more` and goes up to `Under $10,000`. The diagonal indicates where the two meet; in other words, where the predicted value matches the true value.
 
-It seems that the random forest model accurately predicts a lot of the values in the `Under $10,000`, `$20,000 to $29,999`, and `$50,000 to $74,999` classes (which you can see because these boxes are more shaded in along the "accuracy" diagonal). For the rest of the classes, the random forest model does not do a very good job of correctly classifying the values. In fact, the random forest classifies the majority of its input as `$20,000 to $29,999`, `30,000 to $39,999`, and `$50,000 to $74,999`, which you can see by the way these rows are very full and more shaded in. In the context of the data provided by the EDA, this makes sense: `$20,000 to $29,999`, `30,000 to $39,999`, and `$50,000 to $74,999` were the classes that had the highest proportion of observations in the dataset. Although we stratified both our initial split and our folds by `income`, it may be that there were not many distinguishing variables in the data. That is, none of the variables may have been good predictors for the income level, causing the random forest to essentially default to the classes with the highest proportion.
+It seems that the random forest model accurately predicts a lot of the values in the `Under $10,000`, `$20,000 to $29,999`, and `$50,000 to $74,999` classes (which you can see because these boxes are more shaded in more fully along the "accuracy" diagonal). For the rest of the classes, the random forest model does not do a very good job of correctly classifying the values. In fact, the random forest classifies the majority of its input as `$20,000 to $29,999`, `30,000 to $39,999`, and `$50,000 to $74,999`, which you can see by the way these rows are very full and more shaded in. In the context of the data provided by the EDA, this makes sense: `$20,000 to $29,999`, `30,000 to $39,999`, and `$50,000 to $74,999` were the classes that had the highest proportion of observations in the dataset. Although we stratified both our initial split and our folds by `income`, it may be that there were not many distinguishing variables in the data. That is, none of the variables may have been good predictors for the income level, causing the random forest to essentially default to categorizing observations into the classes with the most values in the training data.
 
 ## Conclusion
 
-The random forest performed decently on the training and testing data. Given their empirical nature and affinity for high-dimensional data, this ensemble model performed the best of the six models we tested. We would be hesitant to endorse its use beyond this project, however, given that it can only provide accurate predictions for specific classes. Attendance of the arts is almost certainly *not* a great predictor of income regardless, given that participation tends to only be voluntary and self-selective, fluctuating with age, lifestyle, and responsibilities.
+The random forest performed decently on the training and testing data. Given their empirical nature and affinity for high-dimensional data, this random forest model performed the best of the six models we tested. We would be hesitant, however, to endorse its use beyond this project, given that it can only provide accurate predictions for specific classes. Attendance of the arts is almost certainly *not* a great predictor of income regardless, given that participation tends to only be voluntary and self-selective, fluctuating with age, lifestyle, and responsibilities.
 
 ## Next Steps
 
-To provide better predictions, it could be invaluable to re-examine the original training dataset, reviewing the dataset with greater domain knowledge to identify variables that we may have discarded that may actually be useful. Another way to improve performance would be to review the correlation plot and only include variables strongly correlated with the outcome variable. That way, inferential statistics could be applied to improve upon our predictive statistical analysis. Future questions to explore are included here:
+To provide better predictions, it could be invaluable to re-examine the original training dataset, reviewing the dataset with greater domain knowledge to identify variables that we may have discarded that may actually be useful. Another way to improve performance would be to review a correlation plot and only include variables strongly correlated with the outcome variable. That way, inferential statistics could be applied to improve upon our predictive statistical analysis. Future questions to explore are included here:
 
 * How can the age of the participant be predicted by other variables within the dataset?
-* Is participation in various arts activities more indicative or predictive of a respondent's marital status or of their age than of the respondent's income?
+* Is participation in various arts activities more indicative of a respondent's marital status or age than of their income? Ie would `marital` or `age` be better outcome variables than `income` in terms of model performance?
+
+## GitHub Repo Link
+
+To access our entire project, including the scripts and `.rda` objects, follow this link to our GitHub repo:
+[OUR REPO](https://github.com/derexwangmang/local_arts_prediction.git){target="_blank"}
 
 ## Data Ciation
 

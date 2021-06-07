@@ -63,4 +63,4 @@ bt_tuned <- bt_workflow %>%
   tune_grid(local_arts_fold, grid = bt_grid)
 
 # Write Out ---------------------------------------------------------------
-save(bt_tuned, bt_model, bt_workflow, file = "output/model_set_up/bt_tuned_non_parallel.rda")
+save(bt_tuned, bt_model, bt_workflow, file = "output/models/bt_tuned.rda")
