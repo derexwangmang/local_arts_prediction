@@ -160,7 +160,7 @@ conf_mat(rf_final_pred, truth = income, estimate = .pred_class) %>%
   autoplot(type = "heatmap")
 ```
 
-The diagonal line on this graph shows accurate predictions. The boxes in the diagonal indicate that the random forest model predicts a lot of values accurately that belong to the `Under $10,000`, `$20,000 to $29,000`, and `$50,000 to $74,999` income brackets. For the rest of the income levels however, performance is significantly worse. The model predicted a lot of the values of the `$20,000 to $29,000` income bracket correctly, but also tended to predict a lot of *other* outcome values that weren't really part of this class as incorrectly belonging to the `$20,000 to $29,000` class. You can see this by how full and shaded in all of the boxes are in the row for predicted as `$20,000 to $29,000` compared to the other classes. As the roc curve showed, the model was not good at differentiating between the `$20,000 to $29,000` class and other classes of the outcome. Interestingly, as you can see along the diagonal, the random forest model predicted *none* of the observations in the `$75,000 to $99,999` class correctly. In fact, the model did not classify ANY outcome values as belonging to this class.
+The diagonal line on this graph shows accurate predictions. The boxes in the diagonal indicate that the random forest model accurately predicts a lot of values that belong to the `Under $10,000`, `$20,000 to $29,000`, and `$50,000 to $74,999` income brackets. For the rest of the income levels however, performance is significantly worse. The model predicted a lot of the values of the `$20,000 to $29,000` income bracket correctly, but also tended to predict a lot of *other* outcome values that weren't really part of this class as incorrectly belonging to the `$20,000 to $29,000` class. You can see this by how full and shaded in all of the boxes are in the row for predicted as `$20,000 to $29,000` compared to the other classes. As the roc curve showed, the model was not good at differentiating between the `$20,000 to $29,000` class and other classes of the outcome. Interestingly, as you can see along the diagonal, the random forest model predicted *none* of the observations in the `$75,000 to $99,999` class correctly. In fact, the model did not classify ANY outcome values as belonging to this class.
 
 ## Conclusion
 
@@ -169,7 +169,7 @@ Unfortunately, the data in the Local Area Arts Participation Study proved to not
 ## GitHub Repo Link
 
 To access our entire project, including the scripts and `.rda` objects, follow this link to our GitHub repo:
-[OUR REPO](https://github.com/derexwangmang/local_arts_prediction.git){target="_blank"}
+[OUR REPO](https://github.com/derexwangmang/local_arts_prediction.git){target="_blank"}.
 
 ## Data Ciation
 

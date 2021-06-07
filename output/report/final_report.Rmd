@@ -488,6 +488,8 @@ We created six models. For each model, we selected certain parameters to tune, t
     * Regular grid with 5 levels for each parameter, for a total of 125 parameter combinations
   * Package Used:
     * `xgboost`
+    
+<br>
   
 * **Elastic Net**: This model focuses on adding regularization to the ordinary least squares model, preferring some bias over high variance. To do this, the elastic net regression adds a penalty that shrinks the slopes of the various parameters in the model. In Ridge and Lasso regression, the penalty is set whereas in the generalized elastic net, the Ridge and Lasso is combined. The major difference between Lasso and Ridge regression is that lasso has the capability to get rid of unimportant parameters completely by shrinking their coefficients to zero. An elastic net model can either be completely ridge, or completely lasso regression, or somewhere in between. This is controlled via the `mixture` parameter.
   * Parameters: 
@@ -498,6 +500,8 @@ We created six models. For each model, we selected certain parameters to tune, t
   * Package Used:
     * `glmnet`
   
+<br>
+  
 * **K-Nearest Neighbors**: The nearest neighbor model predicts new points by averaging values of the k most similar observations in the reference data to the new data point, with similar observations being closer in distance than different observations. (Note: we had flagged this model for use in an ensemble by keeping the predictions and workflow after tuning, but we did not end up using the ensemble due to incompatability issues with our outcome variable.)
   * Parameters:
     * neighbors: the number of neighbors taken into account
@@ -505,7 +509,9 @@ We created six models. For each model, we selected certain parameters to tune, t
     * Regular grid with 20 levels
   * Package Used:
     * `kknn`
-  
+    
+<br>
+
 * **Neural Network**: Also known as multilayer perceptrons, neural networks contain layers that each have perceptrons (also known as "hidden units") within them. The data is fed through these layers, and each layer transforms the data in some meaningful way so that the this model can classify the input accurately. Each layer is associated with a weight and a bias that controls whether or not a perceptron inside a layer will "fire" (ie release an output) when the input is fed to it. All layers start with an arbitrary weight value, and then, over various iterations (or epochs), the neural network will adjust the weights based on the error of the output from the actual values (given by a loss function). (Note: we had flagged this model for use in an ensemble by keeping the predictions and workflow after tuning, but we did not end up using the ensemble due to incompatability issues with our outcome variable.)
   * Parameters:
     * hidden_units: number of perceptrons inside a layer
@@ -514,6 +520,8 @@ We created six models. For each model, we selected certain parameters to tune, t
     * Regular grid with 5 levels for each parameter, for a total of 25 parameter combinations
   * Package Used:
     * `keras`
+
+<br>
   
 * **Random Forest**: The random forest is an ensemble model that combines a set of decision trees. For each decision tree, a random set of input variables are included. Then for the test data, the random forest considers the "vote" from each tree, with the class receiving the highest "vote" serving as the classification.
   * Parameters:
@@ -523,6 +531,8 @@ We created six models. For each model, we selected certain parameters to tune, t
     * Regular grid with 5 levels for each parameter, for a total of 25 parameter combinations
   * Package Used:
     * `ranger`
+    
+<br>  
   
 * **Support Vector Machine**: This model identifies a maximal margin classifying hyperplane (meaning it maximizes the distance between it and the nearest data points) that splits the data into the appropriate classes. (Note: we had flagged this model for use in an ensemble by keeping the predictions and workflow after tuning, but we did not end up using the ensemble due to incompatability issues with our outcome variable.)
   * Parameters:
@@ -647,11 +657,11 @@ It seems that the random forest model accurately predicts a lot of the values in
 
 ## Conclusion
 
-The random forest performed decently on the training and testing data. Given their empirical nature and affinity for high-dimensional data, this random forest model performed the best of the six models we tested. We would be hesitant, however, to endorse its use beyond this project, given that it can only provide accurate predictions for specific classes. Attendance of the arts is almost certainly *not* a great predictor of income regardless, given that participation tends to only be voluntary and self-selective, fluctuating with age, lifestyle, and responsibilities.
+The random forest performed decently on the training and testing data. Given their empirical nature and affinity for high-dimensional data, this random forest model performed the best of the six models we tested. We would be hesitant, however, to endorse its use beyond this project, given that it can only provide accurate predictions for specific classes. There are multiple classes of the outcome in which the random forest model did a very poor job of correctly differentiating between that class and the other classes of the outcome. Attendance of the arts is unfortunately almost certainly *not* a great predictor of income. While having more money can increase one's ability to access the arts, participation in arts activities tends to only be voluntary and self-selective, fluctuating with individual interests, age, lifestyle, and responsibilities.
 
 ## Next Steps
 
-To provide better predictions, it could be invaluable to re-examine the original training dataset, reviewing the dataset with greater domain knowledge to identify variables that we may have discarded that may actually be useful. Another way to improve performance would be to review a correlation plot and only include variables strongly correlated with the outcome variable. That way, inferential statistics could be applied to improve upon our predictive statistical analysis. Future questions to explore are included here:
+To provide better predictions, it could be invaluable to re-examine the original training dataset, reviewing the dataset with greater domain knowledge to identify variables that we may have discarded that may actually be useful. Another way to improve performance would be to review a correlation plot and only include variables strongly correlated with the outcome variable. That way, inferential statistics could be applied to improve upon our predictive statistical analysis. Furthermore, other questions regarding the variables in this data-set to explore in the future are included here:
 
 * How can the age of the participant be predicted by other variables within the dataset?
 * Is participation in various arts activities more indicative of a respondent's marital status or age than of their income? Ie would `marital` or `age` be better outcome variables than `income` in terms of model performance?
@@ -659,7 +669,7 @@ To provide better predictions, it could be invaluable to re-examine the original
 ## GitHub Repo Link
 
 To access our entire project, including the scripts and `.rda` objects, follow this link to our GitHub repo:
-[OUR REPO](https://github.com/derexwangmang/local_arts_prediction.git){target="_blank"}
+[OUR REPO](https://github.com/derexwangmang/local_arts_prediction.git){target="_blank"}.
 
 ## Data Ciation
 
