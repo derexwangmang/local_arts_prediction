@@ -609,10 +609,13 @@ Interestingly, `weight`, which is a variable that gives the weighting factor use
 
 ## Performance on Test Data
 
-After fitting the model to the entire training dataset with tuned parameters, we reviewed its performance on the testing dataset.
+After fitting the model to the entire training dataset with tuned parameters, we reviewed its performance on the testing dataset. The code for applying the finalized and fitted model to the testing data can be found inside our `evaluation.R` script, which is located in the `models` folder inside our `output` folder. Below, the table of predicted probabilities produced by the model after applying it to the testing data has been read in, and then is fed to the `roc_auc` function in order to evaluate the performance of the model on the testing data.
 
 ```{r roc-auc-val}
+# load the table of predicted values from applying the model to the test data
 load("output/models/random_forest_predictions.rda")
+
+# feed the predicted values to the roc-auc function
 rf_final_pred %>%
   roc_auc(truth = income, `.pred_Under $10,000`, `.pred_$10,000 to $14,999`, `.pred_$15,000 to $19,999`,
                      `.pred_$20,000 to $29,999`, `.pred_$30,000 to $39,999`, `.pred_$40,000 to $49,999`,

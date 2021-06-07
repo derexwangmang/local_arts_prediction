@@ -27,7 +27,7 @@ library(vip)
 
 ## Introduction: Local Arts 
 
-The arts are an integral and enriching aspect of society. It was our collective love of the arts and interest in the dynamics of arts engagement in the United States that drew us to the Local Area Arts Participation study from 1992. This study collected information on engagement with live and recorded local arts for 5,040 total Americans from 12 different localities (Broward County, Chicago, Dade County, Las Vegas, Pittsburgh, Reno, Rural Nevada, San Jose, Seattle, Sedona, Winston-Salem). Variables in the dataset included participation data such as how frequently the respondent had gone to a live jazz concert in the past year, whether or not they had attended a movie in the theaters in the past year, the number of books the respondent had read in the last year, as well as demographic information such as age, race, marital status, gender, and household income. The study was funded by the National Endowment for the Arts (Research Division) and conducted by Abt Associates of Cambridge, MA. We were especially interested in the accessibility of local arts, and thus we decided to utilize the variables in the Local Area Arts Participation study to predict the household income of the respondent. In this executive summary, we will give a short overview of our predictive modeling project, highlighting in particular our outcome variable, the pre-processing recipes used on our data, the models tuned and their performance, and the final performance of our best model on the testing data.
+The arts are an integral and enriching aspect of society. It was our collective love of the arts and interest in the dynamics of arts engagement in the United States that drew us to the Local Area Arts Participation study from 1992. This study collected information on engagement with live and recorded local arts for 5,040 total Americans from 12 different localities (Broward County, Chicago, Dade County, Las Vegas, Pittsburgh, Reno, Rural Nevada, San Jose, Seattle, Sedona, Winston-Salem). Variables in the dataset included arts participation data such as how frequently the respondent had gone to a live jazz concert in the past year, whether or not they had attended a movie in the theaters in the past year, the number of books the respondent had read in the last year, as well as demographic information such as age, race, marital status, gender, and household income. The study was funded by the National Endowment for the Arts (Research Division) and conducted by Abt Associates of Cambridge, MA. We were especially interested in the accessibility of local arts, and thus we decided to utilize the variables in the Local Area Arts Participation study to predict the household income of the respondent. In this executive summary, we will give a short overview of our predictive modeling project, highlighting in particular our outcome variable, the pre-processing recipes used on our data, the models tuned and their performance, and the final performance of our best model on the testing data.
 
 ## Outcome Variable
 
@@ -53,7 +53,7 @@ local_arts_data %>%
   theme_minimal()
 ```
 
-As you can see from the graph, the income brackets `$50,000 to $74,999`, `$30,000 to $39,999`, and `$20,000 to $29,999` had the most values, while `$100,000 or more`, `$75,000 to $99,999`, and `$10,000 to $14,999` had the least number of values (less than half that of the levels with the most values). This imbalance lead us to stratify our initial split and our k-fold cross-validation by `income` to ensure that certain levels were not over or under represented between the training and testing data and across the folds. 
+As you can see from the graph, the income brackets `$50,000 to $74,999`, `$30,000 to $39,999`, and `$20,000 to $29,999` had the most values, while `$100,000 or more`, `$75,000 to $99,999`, and `$10,000 to $14,999` had the least number of values (less than half that of the levels with the most values). This imbalance lead us to stratify our initial split and our k-fold cross-validation by `income` to ensure that certain levels of the outcome were not over or under represented between the training and testing data and across the folds. 
 
 ## Recipes
 
@@ -110,11 +110,11 @@ best_models %>%
   kable_styling()
 ```
 
-The random forest model clearly performs the best out of all the model types as it produces an roc-auc value of 0.712. Even when taking into account the standard errors of both the random forest model, and the boosted tree, the second highest performing model, the range of roc-auc values of the random forest model is still greater than that of the boosted tree. This gives us conclusive evidence that the random forest model is our best performing model, and thus the model that we will use to predict the outcome values on our test data.
+The random forest model clearly performs the best out of all the model types as it produces an roc-auc value of 0.712. Even when taking into account the standard errors of both the random forest model and the boosted tree, the second highest performing model, the roc-auc value of the random forest model is still greater than that of the boosted tree. This gives us conclusive evidence that the random forest model is our best performing model, and thus the model that we will use to predict the outcome values on our test data.
 
 ## Random Forest's Performance on Testing Data
 
-After we identified the random forest as the model with the best performance, we then selected the parameters that led to the best performance in the folds. This was an `mtry` value of 33 and a `min_n` value of 40. We used these parameters as part of the final model. This fitted model is what was used to predict values of `income` using the testing data. The code used to do these two steps is printed below.
+After we identified the random forest as the model with the best performance, we then selected the parameters that led to the best performance in the folds. This was an `mtry` value of 33 and a `min_n` value of 40. We used these parameters as part of the final model, which was fitted to the entire training data. This fitted model is what was used to predict values of `income` using the testing data. The code used to do these two steps (finalize the workflow with the best parameters and fit the model to the training data) is printed below. 
 
 ```{r finalizing-and-fitting, eval = F}
 # set seed
@@ -128,16 +128,20 @@ rf_final_workflow <- rf_workflow %>%
 rf_final_results <- fit(rf_final_workflow, local_arts_train)
 ```
 
+We then applied the finalized and fitted model to the testing data to produce a table of predicted probabilities. The code for doing this can be found inside our `evaluation.R` script, which is located in the `models` folder inside our `output` folder. Below, the table has been read in, and then is fed to the `roc_auc` function in order to evaluate the performance of the model on the testing data.
+
 ```{r roc-auc-val}
+# load the table of predicted values from applying the model to the test data
 load("output/models/random_forest_predictions.rda")
 
+# feed the predicted values to the roc-auc function
 rf_final_pred %>%
   roc_auc(truth = income, `.pred_Under $10,000`, `.pred_$10,000 to $14,999`, `.pred_$15,000 to $19,999`,
                      `.pred_$20,000 to $29,999`, `.pred_$30,000 to $39,999`, `.pred_$40,000 to $49,999`,
                      `.pred_$50,000 to $74,999`, `.pred_$75,000 to $99,999`, `.pred_$100,000 or more`)
 ```
 
-The overall roc-auc value of our random forest model on the test data is 0.715, which is similar to the random forest's performance in the cross-validated folds, indicating that the cross-validated folds prevented overfitting and led to an accurate assessment of the data. We thought it would also be important, however, to look at a break down of the performance of the random forest model across the different classes of our outcome. This can be achieved by assessing the roc curves, which are printed below. 
+The overall roc-auc value of our random forest model on the test data is 0.715, which is similar to the random forest's performance in the cross-validated folds, indicating that the cross-validated folds prevented overfitting and led to an accurate assessment of the model's true performance. We thought it would also be important, however, to look at a break down of the performance of the random forest model across the different classes of our outcome. This can be achieved by assessing the ROC curves, which are printed below. 
 
 ```{r roc-auc-plot}
 rf_final_pred %>%
@@ -147,7 +151,7 @@ rf_final_pred %>%
   autoplot()
 ```
 
-The roc-auc plots indicate that the random forest predicts the `Under $10,000` and `$50,000 to $74,999` income bracket well. For the rest of the income levels however, performance is significantly worse. For the income brackets starting with `$20,000`, `$30,000`, and `$40,000`, the model fails to accurately distinguish between the correct class and a different, incorrect class. It may have been that none of the variables were good predictors for income level, causing the random forest to essentially default to the classes with the most values.
+The roc-auc curves indicate that the random forest predicts the `Under $10,000` and `$50,000 to $74,999` income bracket well. For the rest of the income levels however, performance is significantly worse. For the income brackets starting with `$20,000`, `$30,000`, and `$40,000`, the model fails to accurately distinguish between the correct class and a different, incorrect class. It may have been that none of the variables were good predictors for income level, causing the random forest to essentially default to the classes with the most values.
 
 These findings are corroborated by also looking at a confusion matrix.
 
@@ -156,8 +160,19 @@ conf_mat(rf_final_pred, truth = income, estimate = .pred_class) %>%
   autoplot(type = "heatmap")
 ```
 
-The diagonal line on this graph shows accurate predictions. The boxes in the diagonal indicate that the random forest model predicts the `Under $10,000`, and `$50,000 to $74,999` income brackets fairly well. For the rest of the income levels however, performance is significantly worse. The model predicted a lot of the values of the `$20,000 to $29,000` income bracket correctly, but also tended to predict a lot of *other* outcome values that weren't really part of this class as incorrectly belonging to the `$20,000 to $29,000` class. You can see this by how full and shaded in all of the boxes are in the row for predicted as `$20,000 to $29,000` compared to the other classes. As the roc curve showed, the model was not good at differentiating between the `$20,000 to $29,000` class and other classes of the outcome. Interestingly, as you can see along the diagonal, the random forest model predicted *none* of the observations in the `$75,000 to $99,999` class correctly. In fact, the model did not classify ANY outcome values as belonging to this class.
+The diagonal line on this graph shows accurate predictions. The boxes in the diagonal indicate that the random forest model predicts a lot of values accurately that belong to the `Under $10,000`, `$20,000 to $29,000`, and `$50,000 to $74,999` income brackets. For the rest of the income levels however, performance is significantly worse. The model predicted a lot of the values of the `$20,000 to $29,000` income bracket correctly, but also tended to predict a lot of *other* outcome values that weren't really part of this class as incorrectly belonging to the `$20,000 to $29,000` class. You can see this by how full and shaded in all of the boxes are in the row for predicted as `$20,000 to $29,000` compared to the other classes. As the roc curve showed, the model was not good at differentiating between the `$20,000 to $29,000` class and other classes of the outcome. Interestingly, as you can see along the diagonal, the random forest model predicted *none* of the observations in the `$75,000 to $99,999` class correctly. In fact, the model did not classify ANY outcome values as belonging to this class.
 
 ## Conclusion
 
 Unfortunately, the data in the Local Area Arts Participation Study proved to not be very predictive of respondent income. It is very likely that, while financial status can increase one's ability to attend arts events, arts participation, particularly local arts participation, is a lot more about individual interest and time. In the future, it would be interesting to try to predict other variables in this dataset, such as age or marital status, or perhaps try to investigate the connection between arts participation and income on a more national scale. 
+
+## GitHub Repo Link
+
+To access our entire project, including the scripts and `.rda` objects, follow this link to our GitHub repo:
+[OUR REPO](https://github.com/derexwangmang/local_arts_prediction.git){target="_blank"}
+
+## Data Ciation
+
+National Endowment for the Arts. Local Area Arts Participation Study 1992. Ann Arbor, MI: Inter-university Consortium for Political and Social Research [distributor], 2015-03-23. https://doi.org/10.3886/ICPSR35586.v1
+
+**Link to NADAC (National Archive of Data on Arts and Culture) site from which data was downloaded:** https://www.icpsr.umich.edu/web/NADAC/studies/35586
