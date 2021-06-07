@@ -1,1 +1,9 @@
-# local_arts_prediction
+# Local Arts Prediction
+
+A predictive modeling project by Derex Wangmang and Elena Andrews utilizing the Local Area Arts Participation study from 1992. With variables regarding participant's engagement with the arts and variables on demographics, we tuned six different models to predict the income bracket of the respondent. 
+
+## Navigating the Repo
+
+There are two main folders in this repository. The `data` folder contains two folders: `unprocessed`, which houses the raw data and it's original codebook as obtained from the National Archive of Data on Arts and Culture. The other folder, `processed`, contains the cleaned and processed data (`local_arts_data.Rda`), it's codebook, the training data (`local_arts_train.rda`), the testing data (`local_arts_test.rda`) and the folded training data (`local_arts_fold.rda`). 
+
+The `output` folder has six subfolders: `data_memo` contains our initial data memo, `data_processing` contains the R-script in which we cleaned our data from it's raw form and then wrote it out as `local_arts_data.Rda,` `eda` contains the EDA report submitted earlier in the quarter, `executive_summary` contains the executive summary, `models` contains the script (`model_set_up`) in which we split and folded our data and wrote out those `.rda` objects, all the scripts for tuning our models, their associated outputs, and an `evaluation.R` script in which we evaluated the performance of our models, finalized and fit our best model, and applied it to the testing data. After applying the best model to the testing data, in `evaluation.R`, we wrote out the table of predicted values. This object is named `random_forest_predictions.rda` and is also inside the `models` folder. Finally, the `report` folder contains our full project report. 
